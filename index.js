@@ -1,16 +1,33 @@
-const dbClient = require('mongoose');
+//setup
+const dbClient       = require('mongoose');
+      express        = require('express');
+      https          = require('https');
+      fs             = require('fs');
+      posts          = require('./model/post');
+      bodyParser     = require("body-parser");
+      methodOverride = require("method-override");
+      app            = express();
+      posts          = require('./model/post')
+//mongo setup
+const uri = "mongodb+srv://cr_news_backend:CR_NEWS_100@crowdnewscluster0.fmmav.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
-const express = require('express');
-const https = require('https');
-const fs = require('fs');
+//config
 
-const app = express();
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride("_method"));
 
-const uri = "mongodb+srv://cr_news_backend:CR_NEWS_100@crowdnewscluster0.fmmav.gcp.mongodb.net/test?retryWrites=true&w=majority"
-
+//demo
 app.get('/', (req, res) => {
     res.send("Whazzzuuppp1!!");
 });
+
+//route setup
+const postrouter = require('./routes/post');
+
+app.use(postrouter);
+
+
+//server
 
 const httpsServer = https.createServer({
     cert: fs.readFileSync('./ssl/cert.pem'),
