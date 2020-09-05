@@ -14,20 +14,16 @@ const uri = process.env.MONGODB_URL;
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
+app.use(methodOverride("_method"));
 
-/* =============================== ROUTE SETUP ============================== */
+/* =============================== ROUTES ============================== */
 
 const posts = require('./routes/post');
 const user = require('./routes/user');
 
 app.use('/api/posts', posts);
 app.use('/api/user', user);
-
-/* ================================ CONFIG ================================ */
-
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(methodOverride("_method"));
 
 /* ================================== DEMO ================================== */
 
