@@ -1,0 +1,27 @@
+{
+  "name": "crowdsource_news",
+  "version": "1.0.0",
+  "description": "A Crowd-sourced News Portal for audience verified news.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snick-m/crowdsource_news.git"
+  },
+  "keywords": [
+    "News",
+    "Fact",
+    "check",
+    "Crowd",
+    "source",
+    "news"
+  ],
+  "author": "Mushfiqur Rahman, Asif Khan, Tausif Mahmud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Snick-m/crowdsource_news/issues"
+  },
+  "homepage": "https://github.com/Snick-m/crowdsource_news#readme"
+}
