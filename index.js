@@ -14,9 +14,26 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use('/api/user', user);
 
+//setup
+// const posts          = require('./model/post');
+const methodOverride = require("method-override");
+
+//config
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride("_method"));
+
+//demo
 app.get('/', (req, res) => {
     res.send("Whazzzuuppp1!!");
 });
+
+//route setup
+const posts = require('./routes/post');
+
+app.use('/api/post', posts);
+
+//server
 
 const httpsServer = https.createServer({
     cert: fs.readFileSync('./ssl/cert.pem'),
