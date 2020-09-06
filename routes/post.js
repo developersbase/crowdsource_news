@@ -51,26 +51,23 @@ router.get('/fetch', (req, res) => {
 
 //post uplaod  request(post request)
 
-router.post('/fetch', (req, res) => {
+// router.get('/fetch', (req, res) => {
+//     res.render('')
+// });
 
-    req.body.post.author = {
-        id: req.user._id,
-        username: req.user.username
-    }
+//post upload form
+
+router.post('/new', (req, res) => {
+    req.body.post.author = req.user._id, // Store User ObjectId as Author field
 
     Post.create(req.body.post, (err, newlyCreated) => {
         if (err) {
             console.log('err')
-        } else {
-            res.redirect('/fetch')
         }
+        // else {
+        //     res.redirect('/fetch')
+        // }
     });
-});
-
-//post upload form
-
-router.get('/new', (req, res) => {
-    res.render('')
 });
 
 //individual  post page
@@ -78,9 +75,10 @@ router.get('/:id', (req, res) => {
     Post.findById(req.params.id).populate("comments").exec((err, foundpost) => {
         if (err) {
             console.log('error');
-        } else {
-            res.render('', { post: foundpost });
-        }
+        } 
+        // else {
+        //     res.render('', { post: foundpost });
+        // }
     })
 });
 

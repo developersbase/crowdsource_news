@@ -15,14 +15,19 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(methodOverride("_method"));
+// app.use(methodOverride("_method"));
 
 /* =============================== ROUTES ============================== */
 
 const posts = require('./routes/post');
 const user = require('./routes/user');
 
-app.use('/api/posts', posts);
+app.use('/api/posts', posts, (req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
+});
 app.use('/api/user', user);
 
 /* ================================== DEMO ================================== */
