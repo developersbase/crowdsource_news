@@ -5,7 +5,7 @@ const fs = require("fs");
 const dbClient = require("mongoose");
 const express = require("express");
 const https = require("https");
-const methodOverride = require("method-override");
+
 require("dotenv").config();
 
 /* ================================== SETUP ================================= */
