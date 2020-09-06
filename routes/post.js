@@ -1,5 +1,7 @@
 const express = require('express');
 const Post = require('../model/post');
+const { ObjectId } = require('mongodb');
+const router = require('./user');
 comments = require('../model/comment')
 router = express.Router();
 
@@ -58,12 +60,17 @@ router.get('/fetch', (req, res) => {
 //post upload form
 
 router.post('/new', (req, res) => {
-    req.body.post.author = req.user._id, // Store User ObjectId as Author field
+    // req.body.post.author = req.user._id, // Store User ObjectId as Author field
+    req.body.post.author = req.body.user._id;
 
     Post.create(req.body.post, (err, newlyCreated) => {
         if (err) {
-            console.log('err')
+            return console.log(err)
         }
+
+        res.status(201).send({
+            message: "ALL OK"
+        });
         // else {
         //     res.redirect('/fetch')
         // }
@@ -71,17 +78,24 @@ router.post('/new', (req, res) => {
 });
 
 //individual  post page
-router.get('/:id', (req, res) => {
-    Post.findById(req.params.id).populate("comments").exec((err, foundpost) => {
+router.get('/:uuid', (req, res) => {
+    Post.findOne({ '_id.uuid': req.params.uuid}, (err, data) => {
         if (err) {
-            console.log('error');
-        } 
-        // else {
-        //     res.render('', { post: foundpost });
-        // }
+            console.log(err);
+            return res.status(400).send({message: "Find Error"});
+        }
+
+        // Process Data
+
+        res.status(200).send({
+            message: data.toString()
+        });
     })
 });
 
+router.get('/', (req,res) => {
+    
+});
 
 //for search filter 
 function escapeRegex(text) {

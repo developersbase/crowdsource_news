@@ -4,8 +4,34 @@ const { v4: uuidv4 } = require('uuid');
 var postSchema = new mongoose.Schema({
     _id: {
         created: {
-            type: Number,
-            default: Date.now()
+            year: {
+                type: Number,
+                default: new Date().getFullYear()
+            },
+            month: {
+                type: Number,
+                default: new Date().getMonth()
+            },
+            date: {
+                type: Number,
+                default: new Date().getDate()
+            },
+            day: {
+                type: Number,
+                default: new Date().getDay()
+            },
+            hour: {
+                type: Number,
+                default: new Date().getHours()
+            },
+            minute: {
+                type: Number,
+                default: new Date().getMinutes()
+            },
+            seconds: {
+                type: Number,
+                default: new Date().getSeconds()
+            }
         },
         uuid: {
             type: String,
@@ -14,10 +40,10 @@ var postSchema = new mongoose.Schema({
     },
 
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true
     },
-    
+
     title: {
         type: String,
         required: true
@@ -28,12 +54,29 @@ var postSchema = new mongoose.Schema({
         required: true
     },
 
+    comments: [
+        {
+            author: String,
+            body: String,
+            upvotes: Number,
+            downvotes: Number,
+            replies: [
+                {
+                    author: String,
+                    body: String,
+                    upvotes: Number,
+                    downvotes: Number,
+                }
+            ]
+        }
+    ],
+
     edits: {
         type: Number,
         default: 0
     },
 
-    lastEdited: {
+    lastEdited: { // Epoch
         type: Number,
         required: false
     }
