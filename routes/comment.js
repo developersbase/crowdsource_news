@@ -4,7 +4,6 @@ const express    =    require('express')
       router     =    express.Router();
       
 
-
       router.post('/blogs/:id/comments',middleware.isLoggedIn,(req,res) => {
             Blogs.findById(req.params.id , (err, blog) => {
                 if(err) {
