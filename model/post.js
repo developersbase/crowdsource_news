@@ -57,9 +57,11 @@ var postSchema = new mongoose.Schema({
     },
 
     comments: [
-        Comment.schema.add({
-            replies: [Comment]
-        })
+        Comment.schema.clone().add(
+            {
+                replies: [Comment.schema]
+            }
+        )
     ],
 
     edits: {
