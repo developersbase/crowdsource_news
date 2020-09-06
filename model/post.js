@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+const comment = require('./user');
+
 var postSchema = new mongoose.Schema({
     _id: {
         created: {

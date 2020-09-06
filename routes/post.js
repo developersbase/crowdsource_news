@@ -1,9 +1,9 @@
 const express = require('express');
 const Post = require('../model/post');
+const Comment = require('../model/comment');
+
 const { ObjectId } = require('mongodb');
-const router = require('./user');
-comments = require('../model/comment')
-router = express.Router();
+const router = express.Router();
 
 
 //---------------------------------------------------- 
@@ -23,7 +23,7 @@ router = express.Router();
 //-------------------------------------------------------
 
 
-//all posts page
+/* ================================ ALL POSTS / SEARCH =============================== */
 
 router.get('/fetch', (req, res) => {
     var noMatch = null;
@@ -57,7 +57,7 @@ router.get('/fetch', (req, res) => {
 //     res.render('')
 // });
 
-//post upload form
+/* =============================== CREATE POST ============================== */
 
 router.post('/new', (req, res) => {
     // req.body.post.author = req.user._id, // Store User ObjectId as Author field
@@ -77,7 +77,8 @@ router.post('/new', (req, res) => {
     });
 });
 
-//individual  post page
+/* =========================== FETCH POST BY UUID =========================== */
+
 router.get('/:uuid', (req, res) => {
     Post.findOne({ '_id.uuid': req.params.uuid}, (err, data) => {
         if (err) {
@@ -97,7 +98,8 @@ router.get('/', (req,res) => {
     
 });
 
-//for search filter 
+/* ============================== SEARCH FILTER ============================= */
+
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
