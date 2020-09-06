@@ -30,6 +30,7 @@
     "express-session": "^1.17.1",
     "method-override": "^3.0.0",
     "mongodb": "^3.6.1",
-    "mongoose": "^5.10.3"
+    "mongoose": "^5.10.3",
+    "uuid": "^8.3.0"
   }
 }
