@@ -1,25 +1,42 @@
 const mongoose = require('mongoose');
-let Comment  = require('./comments');
-let User     = require('./user')
+const { v4: uuidv4 } = require('uuid');
 
 var postSchema = new mongoose.Schema({
-    title:String,
-    image:String,
-    description: { type:String, default:'..' },
-    author: {
-        id: {
-           type: mongoose.Schema.Types.ObjectId,
-           ref: "User"
+    _id: {
+        created: {
+            type: Number,
+            default: Date.now()
         },
-        username: String,
-     },
-    comments: [
-        {
-           type: mongoose.Schema.Types.ObjectId,
-           ref: "Comment"
-        }
-     ],
-    date:{type: Date, default: Date.now} 
+        uuid: {
+            type: String,
+            default: uuidv4()
+        },
+    },
+
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    
+    title: {
+        type: String,
+        required: true
+    },
+
+    body: {
+        type: String,
+        required: true
+    },
+
+    edits: {
+        type: Number,
+        default: 0
+    },
+
+    lastEdited: {
+        type: Number,
+        required: false
+    }
 });
 
 
