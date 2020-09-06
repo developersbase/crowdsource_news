@@ -9,7 +9,7 @@ const e = require('express');
 // User login api 
 router.post('/login', (req, res) => {
     // Find user with requested email 
-    User.findOne(req.body.email == "" ? { username: req.body.username } : { email: req.body.email }, function (err, user) {
+    User.findOne(req.body.email ? { email: req.body.email } : { username: req.body.username }, function (err, user) {
         if (user === null) {
             return res.status(400).send({
                 message: "User not found."
