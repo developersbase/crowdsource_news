@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const comment = require('./user');
+const Comment = require('./comment');
 
 var postSchema = new mongoose.Schema({
     _id: {
@@ -57,20 +57,9 @@ var postSchema = new mongoose.Schema({
     },
 
     comments: [
-        {
-            author: String,
-            body: String,
-            upvotes: Number,
-            downvotes: Number,
-            replies: [
-                {
-                    author: String,
-                    body: String,
-                    upvotes: Number,
-                    downvotes: Number,
-                }
-            ]
-        }
+        Comment.schema.add({
+            replies: [Comment]
+        })
     ],
 
     edits: {
