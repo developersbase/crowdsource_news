@@ -17,6 +17,7 @@ router.post('/login', (req, res) => {
         }
         else {
             if (user.validPassword(req.body.password)) {
+                req.session.Auth = user._id;
                 return res.status(201).send({
                     message: "User Logged In",
                 })

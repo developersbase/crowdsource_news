@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const dbClient = require("mongoose");
 const express = require("express");
+const session = require("express-session");
 const https = require("https");
 
 require("dotenv").config();
@@ -17,45 +18,57 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: true,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
+
 /* =============================== ROUTES ============================== */
 
 const posts = require("./routes/post");
 const user = require("./routes/user");
+const session = require("express-session");
 
 app.use("/api/posts", posts, (req, res, next) => {
-  res.locals.currentUser = req.user;
-  res.locals.error = req.flash("error");
-  res.locals.success = req.flash("success");
-  next();
+    res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
 });
 app.use("/api/user", user);
 
 /* ================================== DEMO ================================== */
 
 app.get("/", (req, res) => {
-  res.send("Whazzzuuppp1!!");
+    res.send("Whazzzuuppp1!!");
 });
 
 /* ================================= SERVER ================================= */
 
 const httpsServer = https.createServer(
-  {
-    cert: fs.readFileSync("./ssl/cert.pem"),
-    key: fs.readFileSync("./ssl/key.pem"),
-  },
-  app
+    {
+        cert: fs.readFileSync("./ssl/cert.pem"),
+        key: fs.readFileSync("./ssl/key.pem"),
+    },
+    app
 );
 
 dbClient
-  .connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    httpsServer.listen(5000, (err) =>
-      err ? console.error(err) : console.log("LISTENING on 5000")
-    );
-  })
-  .catch((error) => console.error(error));
+    .connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+    })
+    .then(() => {
+        httpsServer.listen(5000, (err) =>
+            err ? console.error(err) : console.log("LISTENING on 5000")
+        );
+    })
+    .catch((error) => console.error(error));
