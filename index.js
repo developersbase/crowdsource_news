@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: true,
         httpOnly: true,
@@ -33,14 +33,8 @@ app.use(session({
 
 const posts = require("./routes/post");
 const user = require("./routes/user");
-const session = require("express-session");
 
-app.use("/api/posts", posts, (req, res, next) => {
-    res.locals.currentUser = req.user;
-    res.locals.error = req.flash("error");
-    res.locals.success = req.flash("success");
-    next();
-});
+app.use("/api/posts", posts);
 app.use("/api/user", user);
 
 /* ================================== DEMO ================================== */

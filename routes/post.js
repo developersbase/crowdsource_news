@@ -1,6 +1,7 @@
 const express = require('express');
 const Post = require('../model/post');
-const Comment = require('../model/comment');
+
+const comment = require('./comment');
 
 const { ObjectId } = require('mongodb');
 const router = express.Router();
@@ -51,17 +52,11 @@ router.get('/fetch', (req, res) => {
     }
 });
 
-//post uplaod  request(post request)
-
-// router.get('/fetch', (req, res) => {
-//     res.render('')
-// });
-
 /* =============================== CREATE POST ============================== */
 
 router.post('/new', (req, res) => {
     // req.body.post.author = req.user._id, // Store User ObjectId as Author field
-    req.body.post.author = req.body.user._id;
+    req.body.post.author = ObjectId(req.body.post.user._id);
 
     Post.create(req.body.post, (err, newlyCreated) => {
         if (err) {
@@ -80,23 +75,25 @@ router.post('/new', (req, res) => {
 /* =========================== FETCH POST BY UUID =========================== */
 
 router.get('/:uuid', (req, res) => {
-    Post.findOne({ '_id.uuid': req.params.uuid}, (err, data) => {
+    Post.findOne({ '_id.uuid': req.params.uuid }, (err, data) => {
         if (err) {
             console.log(err);
-            return res.status(400).send({message: "Find Error"});
+            return res.status(400).send({ message: "Find Error" });
         }
 
         // Process Data
 
-        res.status(200).send({
-            message: data.toString()
-        });
+        res.status(200).json(data.toJSON());
     })
 });
 
-router.get('/', (req,res) => {
-    
+router.get('/', (req, res) => {
+
 });
+
+/* ======================= COMMENTS & REPLIES HANDLING ====================== */
+
+router.use('/:postUUID/comments/', comment);
 
 /* ============================== SEARCH FILTER ============================= */
 
