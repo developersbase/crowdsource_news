@@ -5,6 +5,7 @@ const comment = require('./comment');
 
 const { ObjectId } = require('mongodb');
 const router = express.Router();
+const middleware = require('../middleware/middleware')
 
 
 //---------------------------------------------------- 
@@ -26,7 +27,7 @@ const router = express.Router();
 
 /* ================================ ALL POSTS / SEARCH =============================== */
 
-router.get('/fetch', (req, res) => {
+router.get('/fetch', middleware.isLoggedIn ,(req, res) => {
     var noMatch = null;
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');

@@ -5,7 +5,7 @@ const router = express.Router();
 // Importing User Schema 
 const User = require('../model/user');
 const e = require('express');
-
+const session = require('express-session');
 // User login api 
 router.post('/login', (req, res) => {
     // Find user with requested email 
@@ -17,10 +17,10 @@ router.post('/login', (req, res) => {
         }
         else {
             if (user.validPassword(req.body.password)) {
-                req.session.Auth = user._id;
+                req.session.userID = user._id;
                 return res.status(201).send({
                     message: "User Logged In",
-                })
+                });
             }
             else {
                 return res.status(400).send({
