@@ -27,7 +27,7 @@ const middleware = require('../middleware/middleware')
 
 /* ================================ ALL POSTS / SEARCH =============================== */
 
-router.get('/fetch', middleware.isLoggedIn,(req, res) => {
+router.get('/fetch', middleware.isLoggedIn ,(req, res) => {
     var noMatch = null;
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');

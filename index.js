@@ -35,7 +35,7 @@ const posts = require("./routes/post");
 const user = require("./routes/user");
 
 app.use("/api/posts", posts);
-app.use("/api/user", user);
+app.use("/api/users", user);
 
 /* ================================== DEMO ================================== */
 
