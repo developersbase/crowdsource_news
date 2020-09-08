@@ -5,7 +5,6 @@ const router = express.Router();
 // Importing User Schema 
 const User = require('../model/user');
 const e = require('express');
-
 // User login api 
 router.post('/login', (req, res) => {
     // Find user with requested email 
