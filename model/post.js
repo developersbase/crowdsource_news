@@ -42,7 +42,7 @@ var postSchema = new mongoose.Schema({
     },
 
     author: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true
     },
 

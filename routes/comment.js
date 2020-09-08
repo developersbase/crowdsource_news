@@ -1,45 +1,26 @@
 const express = require('express')
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-const Comment = require('../model/comment')
-const Post = require('../model/post')
+const Post = require('../model/post');
+const { ObjectId } = require('mongodb');
 
 
-router.post('', (req, res) => {
-    Post.findById(req.params.id, (err, post) => {
+router.put('/new', (req, res) => {
+    Post.findOne({ '_id.uuid': req.params.postUUID }, (err, post) => {
+        console.log(req.params.postUUID);
         if (err) {
             console.log(err);
             res.redirect('back')
         } else {
-            Comment.create(req.body.comment, (err, comment) => {
-                if (err) {                  
-                    console.log(err);
-                } else {
-                    comment.author.id = req.user._id;
-                    comment.author.username = req.user.username;
-                    comment.save()
-                    Post.comments.push(comment);
-                    Post.save();
-                    res.redirect(`/${post._id}`)
-                }
-            })
+            req.body.comment['author'] = ObjectId("5f53c1e08b56fe5d74080c9b");
+
+            post.comments.push(req.body.comment);
+            post.save();
+
+            res.status(200).send("Added Comment!");
         }
-    })
+        console.log(post);
+    });
 });
-
-router.delete('', middleware.checkCommentOwnership, (req, res) => {
-    Comment.findByIdAndDelete(req.params.comment_id, (err, removeComment) => {
-        if (err) {
-            res.redirect('back');
-        } else {
-            res.redirect('/blogs/' + req.params.id)
-        }
-    })
-});
-
-
-
-
-
 
 module.exports = router;
