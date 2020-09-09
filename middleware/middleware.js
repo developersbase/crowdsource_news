@@ -1,18 +1,34 @@
-const User = require('../model/user');
-const session = require('express-session');
+const Comment = require('../model/comment');
+const Post = require('../model/post');
 
+const MW = {
+    userSession: {},
+    posts: {},
+    comments: {}
+};
 
-const middlewareObj = {};
+/* ====================== USER SESSION MIDDLEWARES ===================== */
 
-/* ====================== USER AUTHORIZATION MIDDLEWARE ===================== */
-
-middlewareObj.isLoggedIn = (req, res, next) => {
+MW.userSession.isLoggedIn = (req, res, next) => {
     if (req.session.userID) {
-        return res.status(200).send({ message: "User Authorized" , userID: req.session.userID});
+        next();
     } else {
-        return res.status(401).send({ message: "error" });
+        return res.status(400).send({ message: "User not Logged in." });
     }
 };
 
-module.exports = middlewareObj;
+/* ============================ POSTS MIDDLEWARES =========================== */
+
+MW.posts.checkAuthor = (req, res, next) => {
+    Post.findOne({ '_id.uuid': req.params.postUUID }, (err, post) => {
+        if (err) return console.log(err);
+
+        if (post.author == req.session.user) {
+            next();
+        }
+        else res.status(403).send({ message: "User Unauthorized." });
+    })
+}
+
+module.exports = MW;
 

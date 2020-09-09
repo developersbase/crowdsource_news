@@ -1,11 +1,12 @@
 const express = require('express');
 const Post = require('../model/post');
 
-const comment = require('./comment');
+const comments = require('./comment');
 
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb'); // ONLY FOR DEVELOPMENT | SOON TO BE REMOVED.
+
 const router = express.Router();
-const middleware = require('../middleware/middleware')
+const MW = require('../middleware/middleware');
 
 
 //---------------------------------------------------- 
@@ -27,27 +28,28 @@ const middleware = require('../middleware/middleware')
 
 /* ================================ ALL POSTS / SEARCH =============================== */
 
-router.get('/fetch', middleware.isLoggedIn ,(req, res) => {
-    var noMatch = null;
+router.get('/search', MW.userSession.isLoggedIn ,(req, res) => {
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         //get all posts
-        Post.find({ title: regex }, (err, allposts) => {
+        Post.find({ title: regex }, (err, posts) => {
             if (err) {
                 console.log(err);
+                res.status(500).json({message: "Server Internal Error"});
             } else {
                 if (allposts.length < 1) {
-                    noMatch = 'No posts match that query.please try again';
+                    res.status(404).json({message: "No Posts Found for Search Query"});
                 }
-                res.render('', { posts: allposts, noMatch: noMatch })
+                res.status(200).json(posts);
             }
         });
     } else {
-        Post.find({}, (err, allposts) => {
+        Post.find({}, (err, posts) => {
             if (err) {
                 console.log(err);
+                res.status(500).json({message: "Server Internal Error"});
             } else {
-                res.render('', { posts: allposts });
+                res.status(200).json(posts);
             }
         })
     }
@@ -67,9 +69,6 @@ router.post('/new', (req, res) => {
         res.status(201).send({
             message: "ALL OK"
         });
-        // else {
-        //     res.redirect('/fetch')
-        // }
     });
 });
 
@@ -94,7 +93,7 @@ router.get('/', (req, res) => {
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use('/:postUUID/comments/', comment);
+router.use('/:postUUID/comments/', comments);
 
 /* ============================== SEARCH FILTER ============================= */
 
