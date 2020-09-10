@@ -7,7 +7,7 @@ import "./feed.styles.scss";
 function Feed(props) {
   return (
     <section class="text-gray-700 body-font overflow-hidden feed">
-      <div class="container px-32 py-24 mx-auto">
+      <div class="container px-8 lg:px-32 py-24 mx-auto">
         <div class="-my-8">
           <div class="py-8 flex flex-wrap md:flex-no-wrap">
             <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
