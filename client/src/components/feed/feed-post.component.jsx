@@ -4,15 +4,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 //import { connect } from "react-redux";
 
-const FeedPost = ({
-  post: {
-    _id: { uuid },
-    title,
-    body,
-  },
-}) => {
+import "./feed-post.styles.scss";
+
+const FeedPost = ({ post: { _id, title, body } }) => {
   return (
-    <div class="py-8 flex flex-wrap md:flex-no-wrap">
+    <div class="py-8 flex flex-wrap md:flex-no-wrap feed-post">
       <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
         <span class="tracking-widest text-gray-900">Corona</span>
         <span class="mt-1 text-gray-500 text-sm">
@@ -22,7 +18,7 @@ const FeedPost = ({
       <div class="md:flex-grow">
         <h2 class="text-2xl text-gray-900 mb-2">{title}</h2>
         <p class="leading-relaxed">{body}</p>
-        <Link to={`/`} class="text-indigo-500 mt-4">
+        <Link to={`/${_id.uuid}`} class="text-indigo-500 mt-4">
           Read News <i class="fas fa-arrow-right"></i>
         </Link>{" "}
       </div>
