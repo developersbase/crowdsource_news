@@ -1,9 +1,5 @@
 import axios from "axios";
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAILED,
-  USER_LOADED,
-  AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   LOGOUT,

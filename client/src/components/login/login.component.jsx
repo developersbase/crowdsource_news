@@ -29,16 +29,16 @@ function Login({ login, isAuthenticated }) {
   }
 
   return (
-    <section class="text-gray-700 relative bg-gray-300">
-      <div class="container px-5 py-24 mx-auto flex justify-center">
-        <div class="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col justify-center items-center w-full mt-10 md:mt-0 relative z-10">
-          <h2 class="text-gray-900 text-lg mb-1 text-center">Log In</h2>
+    <section className="text-gray-700 relative bg-gray-300">
+      <div className="container px-5 py-24 mx-auto flex justify-center">
+        <div className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col justify-center items-center w-full mt-10 md:mt-0 relative z-10">
+          <h2 className="text-gray-900 text-lg mb-1 text-center">Log In</h2>
           <form
-            className="flex justify-center items-center flex-col"
+            classNameName="flex justify-center items-center flex-col"
             onSubmit={(e) => onSubmit(e)}
           >
             <input
-              class="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
+              className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
               placeholder="Email"
               type="email"
               name="email"
@@ -46,7 +46,7 @@ function Login({ login, isAuthenticated }) {
               onChange={(e) => onChange(e)}
             />
             <input
-              class="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
+              className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
               placeholder="Password"
               type="password"
               name="password"
@@ -56,13 +56,13 @@ function Login({ login, isAuthenticated }) {
 
             <input
               type="submit"
-              className="text-white text-center bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+              classNameName="text-white text-center bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
               value="Login"
             />
           </form>
-          <p class="py-2">
+          <p className="py-2">
             Don't have an account?{" "}
-            <Link to="/signup" class="mr-5 hover:text-gray-900">
+            <Link to="/signup" className="mr-5 hover:text-gray-900">
               Sign Up
             </Link>
           </p>

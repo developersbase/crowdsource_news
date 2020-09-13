@@ -1,7 +1,6 @@
 import {
   REGISTRATION_SUCCESS,
   REGISTRATION_FAILED,
-  USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
@@ -28,7 +27,8 @@ export default function (state = initialState, action) {
 
     case REGISTRATION_FAILED:
     case LOGOUT:
-      localStorage.removeItem("token");
+    case AUTH_ERROR:
+    case LOGIN_FAILED:
       return { ...state, user: null, isAuthenticated: false, loading: false };
 
     default:

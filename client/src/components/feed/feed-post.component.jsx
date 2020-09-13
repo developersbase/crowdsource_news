@@ -8,18 +8,18 @@ import "./feed-post.styles.scss";
 
 const FeedPost = ({ post: { _id, title, body } }) => {
   return (
-    <div class="py-8 flex flex-wrap md:flex-no-wrap feed-post">
-      <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-        <span class="tracking-widest text-gray-900">Corona</span>
-        <span class="mt-1 text-gray-500 text-sm">
+    <div className="py-8 flex flex-wrap md:flex-no-wrap feed-post">
+      <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+        <span className="tracking-widest text-gray-900">Corona</span>
+        <span className="mt-1 text-gray-500 text-sm">
           {Moment().format("MMM Do YYYY")}
         </span>
       </div>
-      <div class="md:flex-grow">
-        <h2 class="text-2xl text-gray-900 mb-2">{title}</h2>
-        <p class="leading-relaxed">{body}</p>
-        <Link to={`/${_id.uuid}`} class="text-indigo-500 mt-4">
-          Read News <i class="fas fa-arrow-right"></i>
+      <div className="md:flex-grow">
+        <h2 className="text-2xl text-gray-900 mb-2">{title}</h2>
+        <p className="leading-relaxed">{body}</p>
+        <Link to={`/${_id.uuid}`} className="text-indigo-500 mt-4">
+          Read News <i className="fas fa-arrow-right"></i>
         </Link>{" "}
       </div>
     </div>

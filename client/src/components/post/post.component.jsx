@@ -12,7 +12,7 @@ import "./post.styles.scss";
 const Post = ({ getPost, post: { post, loading }, match }) => {
   useEffect(() => {
     getPost(match.params.id);
-  }, []);
+  }, [getPost, match.params.id]);
 
   return loading || post === null ? (
     <>
@@ -69,22 +69,22 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
       <div className=" flex justify-between content-center px-4 pb-12">
         <div className="text-left">
           <p>
-            <a
-              href="#"
+            <Link
+              to="/"
               className="break-normal text-base md:text-sm text-teal-500 font-bold no-underline hover:underline"
             >
               Random News
-            </a>
+            </Link>
           </p>
         </div>
         <div className="text-right">
           <p>
-            <a
-              href="#"
+            <Link
+              to="/"
               className="break-normal text-base md:text-sm text-teal-500 font-bold no-underline hover:underline"
             >
               Random News
-            </a>
+            </Link>
           </p>
         </div>
       </div>

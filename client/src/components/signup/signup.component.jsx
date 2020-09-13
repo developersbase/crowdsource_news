@@ -24,7 +24,7 @@ function SignUp({ setAlert, signup, isAuthenticated }) {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       console.log("Passwords don't match");
       setAlert("Passwords do not match", "danger", "times-circle", 3000);
     } else {

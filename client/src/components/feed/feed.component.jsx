@@ -18,8 +18,8 @@ const Feed = ({ getPosts, post: { posts, loading } }) => {
   return loading ? (
     <Spinner />
   ) : (
-    <section class="text-gray-700 overflow-hidden feed">
-      <div class="container px-8 lg:px-32 py-24 mx-auto">
+    <section className="text-gray-700 overflow-hidden feed">
+      <div className="container px-8 lg:px-32 py-24 mx-auto">
         {posts.map((post) => (
           <FeedPost key={post._id.uuid} post={post} />
         ))}

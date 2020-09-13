@@ -1,11 +1,5 @@
 import axios from "axios";
-import {
-  GET_POSTS,
-  POST_ERROR,
-  DELETE_POST,
-  ADD_POST,
-  GET_POST,
-} from "./posts.types";
+import { GET_POSTS, POST_ERROR, GET_POST } from "./posts.types";
 
 //Get Posts
 export const getPosts = () => async (dispatch) => {
