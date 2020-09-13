@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import Alert from "./components/alert/alert.component";
 import Feed from "./components/feed/feed.component";
 import Header from "./components/header/header.component";
 import Publish from "./components/publish/publish.component";
@@ -20,6 +21,7 @@ function App() {
     <Provider store={store}>
       <Router>
         <Header />
+        <Alert />
         <Switch>
           <Route exact path="/" component={Feed} />
           <PrivateRoute exact path="/publish" component={Publish} />

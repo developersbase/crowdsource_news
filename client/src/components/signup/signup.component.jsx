@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+
 import { signup } from "../../redux/reducers/auth/auth.actions";
+import { setAlert } from "../../redux/reducers/alert/alert.actions";
+
 import PropTypes from "prop-types";
 
-function SignUp({ signup, isAuthenticated }) {
+function SignUp({ setAlert, signup, isAuthenticated }) {
   const [formData, setFormdata] = useState({
     username: "",
     email: "",
@@ -23,6 +26,7 @@ function SignUp({ signup, isAuthenticated }) {
     console.log(formData);
     if (password != confirmPassword) {
       console.log("Passwords don't match");
+      setAlert("Passwords do not match", "danger", "times-circle", 3000);
     } else {
       signup({ username, email, password });
       console.log("Success");
@@ -102,4 +106,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { signup })(SignUp);
+export default connect(mapStateToProps, { signup, setAlert })(SignUp);
