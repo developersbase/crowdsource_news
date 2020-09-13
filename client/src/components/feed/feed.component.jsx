@@ -6,15 +6,18 @@ import PropTypes from "prop-types";
 import { getPosts } from "../../redux/reducers/posts/posts.actions";
 
 import FeedPost from "./feed-post.component";
+import Spinner from "../spinner/spinner.component";
 
 import "./feed.styles.scss";
 
-const Feed = ({ getPosts, post: { posts } }) => {
+const Feed = ({ getPosts, post: { posts, loading } }) => {
   useEffect(() => {
     getPosts();
   }, [getPosts]);
 
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <section class="text-gray-700 overflow-hidden feed">
       <div class="container px-8 lg:px-32 py-24 mx-auto">
         {posts.map((post) => (

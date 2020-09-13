@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 
 import { getPost } from "../../redux/reducers/posts/posts.actions";
 
+import Spinner from "../spinner/spinner.component";
+
 import "./post.styles.scss";
 
 const Post = ({ getPost, post: { post, loading }, match }) => {
@@ -13,7 +15,9 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
   }, []);
 
   return loading || post === null ? (
-    <>Loading</>
+    <>
+      <Spinner />
+    </>
   ) : (
     <div className="container w-full md:max-w-3xl mx-auto pt-20 post">
       <div className="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal">
