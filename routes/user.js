@@ -33,20 +33,30 @@ router.post("/login", (req, res) => {
 });
 
 // User signup api
-router.post("/signup", (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
+  const { username, email, password } = req.body;
   // Creating empty user object
 
-  let newUser = new User();
+  //let newUser = new User();
+  let newUser = await User.findOne({ email });
+
+  if (newUser) {
+    return res
+      .status(400)
+      .json({ errors: [{ message: "User already exists" }] });
+  }
+
+  newUser = new User();
 
   // Initialize newUser object with request data
-  newUser.username = req.body.username;
-  newUser.email = req.body.email;
+  newUser.username = username;
+  newUser.email = email;
 
   // Call setPassword function to hash password
-  newUser.setPassword(req.body.password);
+  newUser.setPassword(password);
 
   // Save newUser object to database
-  newUser.save((err, User) => {
+  await newUser.save((err, User) => {
     if (err) {
       return res.status(400).send({
         message: "Failed to add user.",

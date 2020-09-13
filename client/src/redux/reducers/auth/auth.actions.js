@@ -5,8 +5,6 @@ import {
   LOGOUT,
   REGISTRATION_SUCCESS,
   REGISTRATION_FAILED,
-  LOOKUP_SUCCESS,
-  LOOKUP_FAILED,
 } from "./auth.types";
 
 //Sign up action function
@@ -31,6 +29,7 @@ export const signup = ({ username, email, password }) => async (dispatch) => {
     console.log(errors);
     dispatch({
       type: REGISTRATION_FAILED,
+      payload: errors,
     });
   }
 };
@@ -64,31 +63,4 @@ export const login = ({ email, password }) => async (dispatch) => {
 //Logout action function
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
-};
-
-//Lookup action function
-export const lookup = ({ username, email }) => async (dispatch) => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
-  const body = JSON.stringify({ username });
-
-  try {
-    const response = await axios.get(`/api/users/lookup`, body, config);
-    console.log("Lookup Successful");
-
-    dispatch({
-      type: LOOKUP_SUCCESS,
-      payload: response.data,
-    });
-  } catch (error) {
-    const errors = error.response.data.errors;
-    console.log(errors);
-    dispatch({
-      type: LOOKUP_FAILED,
-    });
-  }
 };

@@ -4,8 +4,6 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
-  LOOKUP_SUCCESS,
-  LOOKUP_FAILED,
   LOGOUT,
 } from "./auth.types";
 
@@ -13,6 +11,7 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   user: null,
+  errors: null,
 };
 
 export default function (state = initialState, action) {
@@ -20,20 +19,25 @@ export default function (state = initialState, action) {
   switch (type) {
     case REGISTRATION_SUCCESS:
     case LOGIN_SUCCESS:
-    case LOOKUP_SUCCESS:
       return {
         ...state,
         user: payload,
         isAuthenticated: true,
         loading: false,
+        errors: null,
       };
 
     case REGISTRATION_FAILED:
     case LOGOUT:
     case AUTH_ERROR:
     case LOGIN_FAILED:
-    case LOOKUP_FAILED:
-      return { ...state, user: null, isAuthenticated: false, loading: false };
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+        errors: payload,
+      };
 
     default:
       return state;

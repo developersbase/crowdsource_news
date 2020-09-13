@@ -4,12 +4,12 @@ import { connect } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { signup, lookup } from "../../redux/reducers/auth/auth.actions";
+import { signup } from "../../redux/reducers/auth/auth.actions";
 import { setAlert } from "../../redux/reducers/alert/alert.actions";
 
 import PropTypes from "prop-types";
 
-function SignUp({ setAlert, signup, lookup, isAuthenticated }) {
+function SignUp({ setAlert, signup, errors, isAuthenticated }) {
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -36,8 +36,6 @@ function SignUp({ setAlert, signup, lookup, isAuthenticated }) {
     onSubmit: (values) => {
       const { username, email, password } = values;
       signup({ username, email, password });
-      lookup({ username, email });
-      console.log("Success");
     },
   });
 
@@ -52,6 +50,9 @@ function SignUp({ setAlert, signup, lookup, isAuthenticated }) {
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
             Sign Up
           </h1>
+          <p className="sm:text-lg text-lg text-red-700">
+            {errors === null ? "" : "User with email already exists!"}
+          </p>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
           <form
@@ -158,11 +159,11 @@ function SignUp({ setAlert, signup, lookup, isAuthenticated }) {
 SignUp.propTypes = {
   signup: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-  lookup: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  errors: state.auth.errors,
 });
 
-export default connect(mapStateToProps, { signup, lookup, setAlert })(SignUp);
+export default connect(mapStateToProps, { signup, setAlert })(SignUp);

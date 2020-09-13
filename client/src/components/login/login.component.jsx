@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 
 import { login } from "../../redux/reducers/auth/auth.actions";
 
-function Login({ login, isAuthenticated }) {
+function Login({ login, errors, isAuthenticated }) {
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -39,6 +39,9 @@ function Login({ login, isAuthenticated }) {
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
             Login
           </h1>
+          <p className="sm:text-lg text-lg text-red-700">
+            {errors === null ? "" : "Either Email or Password is Incorrect"}
+          </p>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
           <form
@@ -90,9 +93,9 @@ function Login({ login, isAuthenticated }) {
               </button>
             </div>
           </form>
-          <p classNameName="flex justify-center items-center py-2">
+          <p className="flex justify-center items-center py-2">
             Don't have an account?{" "}
-            <Link to="/signup" classNameName="mr-5 hover:text-gray-900">
+            <Link to="/signup" className="mr-5 hover:text-gray-900">
               Sign Up
             </Link>
           </p>
@@ -109,6 +112,7 @@ Login.propTypes = {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  errors: state.auth.errors,
 });
 
 export default connect(mapStateToProps, { login })(Login);
