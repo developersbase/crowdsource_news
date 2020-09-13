@@ -4,6 +4,8 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
+  LOOKUP_SUCCESS,
+  LOOKUP_FAILED,
   LOGOUT,
 } from "./auth.types";
 
@@ -18,6 +20,7 @@ export default function (state = initialState, action) {
   switch (type) {
     case REGISTRATION_SUCCESS:
     case LOGIN_SUCCESS:
+    case LOOKUP_SUCCESS:
       return {
         ...state,
         user: payload,
@@ -29,6 +32,7 @@ export default function (state = initialState, action) {
     case LOGOUT:
     case AUTH_ERROR:
     case LOGIN_FAILED:
+    case LOOKUP_FAILED:
       return { ...state, user: null, isAuthenticated: false, loading: false };
 
     default:

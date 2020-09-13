@@ -1,5 +1,5 @@
 //COLORS
-$master-color: #f0f0f0;
+//$master-color: #f0f0f0;
 $color-primary: #0a227c;
 $color-primary-light: #12c7f5;
 $color-primary-dark: #3182ce;
@@ -26,11 +26,8 @@ $default-font: "Jost";
 
 * {
   font-family: $default-font;
-  // overflow-x: hidden;
 }
-.master {
-  background-color: $master-color;
-}
+
 @mixin clearfix {
   &::after {
     content: "";

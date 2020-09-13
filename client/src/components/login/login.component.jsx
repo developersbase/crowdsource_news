@@ -1,68 +1,98 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import PropTypes from "prop-types";
 
 import { login } from "../../redux/reducers/auth/auth.actions";
 
 function Login({ login, isAuthenticated }) {
-  const [formData, setFormdata] = useState({
-    email: "",
-    password: "",
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(8, "Password must be at least 8 characters")
+        .required("Password is required"),
+    }),
+
+    onSubmit: (values) => {
+      const { email, password } = values;
+      login({ email, password });
+      console.log("Success");
+    },
   });
-
-  const { email, password } = formData;
-
-  const onChange = (e) => {
-    setFormdata({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    login({ email, password });
-    console.log("Success");
-  };
-
   if (isAuthenticated) {
     return <Redirect to="/" />;
   }
 
   return (
-    <section className="text-gray-700 relative bg-gray-300">
-      <div className="container px-5 py-24 mx-auto flex justify-center">
-        <div className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col justify-center items-center w-full mt-10 md:mt-0 relative z-10">
-          <h2 className="text-gray-900 text-lg mb-1 text-center">Log In</h2>
+    <section className="text-gray-700 body-font relative">
+      <div className="container px-5 py-24 mx-auto">
+        <div className="flex flex-col text-center w-full mb-5">
+          <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+            Login
+          </h1>
+        </div>
+        <div className="lg:w-1/2 md:w-2/3 mx-auto">
           <form
-            classNameName="flex justify-center items-center flex-col"
-            onSubmit={(e) => onSubmit(e)}
+            onSubmit={formik.handleSubmit}
+            className="flex flex-col items-center justify-center flex-wrap -m-2"
           >
-            <input
-              className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
-              placeholder="Email"
-              type="email"
-              name="email"
-              value={email}
-              onChange={(e) => onChange(e)}
-            />
-            <input
-              className="bg-white rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 mb-4"
-              placeholder="Password"
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => onChange(e)}
-            />
-
-            <input
-              type="submit"
-              classNameName="text-white text-center bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-              value="Login"
-            />
+            <div className="p-2 w-1/2">
+              <input
+                className={`w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 ${
+                  formik.touched.email && formik.errors.email
+                    ? "border border-red-400"
+                    : ""
+                }`}
+                placeholder="Email"
+                type="email"
+                name="email"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <div className="text-red-700">{formik.errors.email}</div>
+              ) : null}
+            </div>
+            <div className="p-2 w-1/2">
+              <input
+                className={`w-full bg-gray-100 rounded border border-gray-400 focus:outline-none focus:border-indigo-500 text-base px-4 py-2 ${
+                  formik.touched.password && formik.errors.password
+                    ? "border border-red-400"
+                    : ""
+                }`}
+                placeholder="Password"
+                type="password"
+                name="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <div className="text-red-700">{formik.errors.password}</div>
+              ) : null}
+            </div>
+            <div className="p-2 w-full">
+              <button
+                type="submit"
+                className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+              >
+                Login
+              </button>
+            </div>
           </form>
-          <p className="py-2">
+          <p classNameName="flex justify-center items-center py-2">
             Don't have an account?{" "}
-            <Link to="/signup" className="mr-5 hover:text-gray-900">
+            <Link to="/signup" classNameName="mr-5 hover:text-gray-900">
               Sign Up
             </Link>
           </p>

@@ -14,7 +14,7 @@ import PrivateRoute from "./components/routing/private-route.component";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
-//import "./variables.scss";
+import "./variables.scss";
 
 function App() {
   return (
