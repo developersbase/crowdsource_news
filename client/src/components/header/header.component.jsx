@@ -16,7 +16,7 @@ function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
       <Link to="/publish" className="mr-5 hover:text-gray-900">
         Publish
       </Link>
-      <Link onClick={logout} to="/" className="mr-5 hover:text-gray-900">
+      <Link onClick={logout} to="/login" className="mr-5 hover:text-gray-900">
         Log Out
       </Link>
       {user ? <p>Hi, {user.username}</p> : <></>}
@@ -37,9 +37,9 @@ function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
     </nav>
   );
   return (
-    <header className="text-black body-font header">
+    <header className="bg-gradient-to-r from-red-500 to-orange-500 text-white header">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-        <span className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <span className="flex title-font font-medium items-center text-white mb-4 md:mb-0">
           <i className="fas fa-book-reader"></i>
           <span className="ml-3 text-xl">
             {" "}
