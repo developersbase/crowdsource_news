@@ -18,16 +18,18 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
+app.use(
+  session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
-    }
-}));
+      secure: true,
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24,
+    },
+  })
+);
 
 /* =============================== ROUTES ============================== */
 
@@ -40,29 +42,29 @@ app.use("/api/users", user);
 /* ================================== DEMO ================================== */
 
 app.get("/", (req, res) => {
-    res.send("Whazzzuuppp1!!");
+  res.send("Whazzzuuppp1!!");
 });
 
 /* ================================= SERVER ================================= */
 
 const httpsServer = https.createServer(
-    {
-        cert: fs.readFileSync("./ssl/cert.pem"),
-        key: fs.readFileSync("./ssl/key.pem"),
-    },
-    app
+  {
+    cert: fs.readFileSync("./ssl/cert.pem"),
+    key: fs.readFileSync("./ssl/key.pem"),
+  },
+  app
 );
 
 dbClient
-    .connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    })
-    .then(() => {
-        httpsServer.listen(5000, (err) =>
-            err ? console.error(err) : console.log("LISTENING on 5000")
-        );
-    })
-    .catch((error) => console.error(error));
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    httpsServer.listen(5000, (err) =>
+      err ? console.error(err) : console.log("LISTENING on 5000")
+    );
+  })
+  .catch((error) => console.error(error));
