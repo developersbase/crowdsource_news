@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
 
 import Alert from "./components/alert/alert.component";
 import Feed from "./components/feed/feed.component";
@@ -12,7 +13,7 @@ import NotFound from "./components/notfound/notfound.component";
 import PrivateRoute from "./components/routing/private-route.component";
 
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import { store, persistor } from "./redux/store";
 
 import "./variables.scss";
 
@@ -20,16 +21,18 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Header />
-        <Alert />
-        <Switch>
-          <Route exact path="/" component={Feed} />
-          <PrivateRoute exact path="/publish" component={Publish} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/signup" component={SignUp} />
-          <Route exact path="/:id" component={Post} />
-          <Route component={NotFound} />
-        </Switch>
+        <PersistGate persistor={persistor}>
+          <Header />
+          <Alert />
+          <Switch>
+            <Route exact path="/" component={Feed} />
+            <PrivateRoute exact path="/publish" component={Publish} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/:id" component={Post} />
+            <Route component={NotFound} />
+          </Switch>
+        </PersistGate>
       </Router>
     </Provider>
   );
