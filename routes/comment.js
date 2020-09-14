@@ -16,9 +16,11 @@ router.put('/new', (req, res) => {
             req.body.comment['author'] = req.session.userID;
 
             post.comments.push(req.body.comment);
-            post.save();
+            post.save((err, post) => {
+                if (err) return res.status(500).send("Server internal error.");
 
-            res.status(200).send("Added Comment!");
+                res.status(200).send("Comment UUID : " + post.comments[0]._id);
+            });
         }
         // console.log(post);
     });
@@ -27,11 +29,15 @@ router.put('/new', (req, res) => {
 /* ============================= DELETE COMMENT ============================= */
 
 router.delete('/:commentUUID', MW.comments.checkAuthor, (req, res) => {
-    Post.findOne({'_id.uuid' : req.params.postUUID}, (err, post) => {
-        if (err) return res.status(404).json({message: "Comment Removal Failed."});
+    Post.findOne({ '_id.uuid': req.params.postUUID }, (err, post) => {
+        if (err) return res.status(404).json({ message: "Comment Removal Failed." });
 
-        post.comments.splice(findCommentIndex(post, req.params.commentUUID), 1);
-        post.save(err => res.status(200).json({message: "Successfully Removed Comment."}));
+        console.log(post.comments.splice(findCommentIndex(post, req.params.commentUUID), 1));
+        post.save(err => {
+            if (err) res.status(400).send();
+            else res.status(200).json({ message: "Successfully Removed Comment." });
+        });
+        console.log(post);
     });
 });
 
