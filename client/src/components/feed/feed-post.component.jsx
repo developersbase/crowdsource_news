@@ -7,12 +7,13 @@ import PropTypes from "prop-types";
 import "./feed-post.styles.scss";
 
 const FeedPost = ({ post: { _id, title, body } }) => {
+  const { date, month, year } = _id.created;
   return (
     <div className="py-8 flex flex-wrap md:flex-no-wrap feed-post">
       <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
         <span className="tracking-widest text-gray-900">Corona</span>
         <span className="mt-1 text-gray-500 text-sm">
-          {Moment().format("MMM Do YYYY")}
+          {date}/{month}/{year}
         </span>
       </div>
       <div className="md:flex-grow">

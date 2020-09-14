@@ -27,7 +27,7 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
           <p>
             <Link
               to="/"
-              className="md:text-sm text-teal-500 font-bold no-underline hover:underline"
+              className="md:text-sm text-teal-500 no-underline hover:underline"
             >
               BACK TO FEED
             </Link>

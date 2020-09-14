@@ -1,5 +1,4 @@
 //COLORS
-//$master-color: #f0f0f0;
 $color-primary: #0a227c;
 $color-primary-light: #12c7f5;
 $color-primary-dark: #3182ce;
@@ -26,21 +25,7 @@ $default-font: "Jost";
 
 * {
   font-family: $default-font;
-}
-
-@mixin clearfix {
-  &::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
-
-@mixin absCenter {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.5);
+  transition: all 0.25s ease;
 }
 
 // 1em=16px;
