@@ -11,7 +11,6 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   user: null,
-  errors: null,
 };
 
 export default function (state = initialState, action) {
@@ -24,7 +23,6 @@ export default function (state = initialState, action) {
         user: payload,
         isAuthenticated: true,
         loading: false,
-        errors: null,
       };
 
     case REGISTRATION_FAILED:
@@ -36,7 +34,6 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         loading: false,
-        errors: payload,
       };
 
     default:

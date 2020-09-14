@@ -50,9 +50,6 @@ function SignUp({ setAlert, signup, errors, isAuthenticated }) {
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
             Sign Up
           </h1>
-          <p className="sm:text-lg text-lg text-red-700">
-            {errors === null ? "" : "User with email already exists!"}
-          </p>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
           <form

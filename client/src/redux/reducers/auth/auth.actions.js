@@ -7,6 +7,8 @@ import {
   REGISTRATION_FAILED,
 } from "./auth.types";
 
+import { setAlert } from "../alert/alert.actions";
+
 //Sign up action function
 export const signup = ({ username, email, password }) => async (dispatch) => {
   const config = {
@@ -27,9 +29,13 @@ export const signup = ({ username, email, password }) => async (dispatch) => {
   } catch (error) {
     const errors = error.response.data.errors;
     console.log(errors);
+    if (errors) {
+      errors.forEach((error) =>
+        dispatch(setAlert(error.message, "danger", "times-circle"))
+      );
+    }
     dispatch({
       type: REGISTRATION_FAILED,
-      payload: errors,
     });
   }
 };
@@ -54,6 +60,11 @@ export const login = ({ email, password }) => async (dispatch) => {
   } catch (error) {
     const errors = error.response.data.errors;
     console.log(errors);
+    if (errors) {
+      errors.forEach((error) =>
+        dispatch(setAlert(error.message, "danger", "times-circle"))
+      );
+    }
     dispatch({
       type: LOGIN_FAILED,
     });

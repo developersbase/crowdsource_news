@@ -6,26 +6,28 @@ const router = express.Router();
 const User = require("../model/user");
 const e = require("express");
 const session = require("express-session");
+
 // User login api
 router.post("/login", (req, res) => {
   // Find user with requested email
+
   User.findOne(
     req.body.email
       ? { email: req.body.email }
       : { username: req.body.username },
     function (err, user) {
       if (user === null) {
-        return res.status(400).send({
-          message: "User not found.",
-        });
+        return res
+          .status(400)
+          .json({ errors: [{ message: "Invalid Email or Password" }] });
       } else {
         if (user.validPassword(req.body.password)) {
           req.session.userID = user._id;
           return res.status(201).json(user);
         } else {
-          return res.status(400).send({
-            message: "Wrong Password",
-          });
+          return res
+            .status(400)
+            .json({ errors: [{ message: "Invalid Email or Password" }] });
         }
       }
     }

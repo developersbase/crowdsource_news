@@ -17,15 +17,12 @@ function Login({ login, errors, isAuthenticated }) {
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
-      password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .required("Password is required"),
+      password: Yup.string().required("Password is required"),
     }),
 
     onSubmit: (values) => {
       const { email, password } = values;
       login({ email, password });
-      console.log("Success");
     },
   });
   if (isAuthenticated) {
@@ -39,9 +36,6 @@ function Login({ login, errors, isAuthenticated }) {
           <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
             Login
           </h1>
-          <p className="sm:text-lg text-lg text-red-700">
-            {errors === null ? "" : "Either Email or Password is Incorrect"}
-          </p>
         </div>
         <div className="lg:w-1/2 md:w-2/3 mx-auto">
           <form

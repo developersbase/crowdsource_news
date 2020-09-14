@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 
 import Alert from "./components/alert/alert.component";
+import Spinner from "./components/spinner/spinner.component";
 import Feed from "./components/feed/feed.component";
 import Header from "./components/header/header.component";
 import Publish from "./components/publish/publish.component";
@@ -21,7 +22,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <PersistGate persistor={persistor}>
+        <PersistGate loading={<Spinner />} persistor={persistor}>
           <Header />
           <Alert />
           <Switch>
