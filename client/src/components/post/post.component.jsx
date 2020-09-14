@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import { getPost } from "../../redux/reducers/posts/posts.actions";
 
 import Spinner from "../spinner/spinner.component";
+import CommentForm from "../comments/comment-form.component";
+import CommentItem from "../comments/comment-item.component";
 
 import "./post.styles.scss";
 
@@ -44,7 +46,10 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
 
       <div className="text-base md:text-sm text-gray-500 px-4 py-6">Tags:</div>
 
-      <hr className="border-b-2 border-gray-400 mb-8 mx-4" />
+      <hr className="border-b-2 border-gray-400 mb-4 mx-4" />
+      <div className="px-4">
+        <p className="text-base md:text-sm leading-none mb-2">Written By</p>
+      </div>
 
       <div className="flex w-full items-center  px-4 py-5">
         <img
@@ -58,36 +63,15 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
           </p>
         </div>
         <div className="justify-end">
-          <button className="bg-transparent border border-gray-500 hover:border-teal-500 text-xs text-gray-500 hover:text-teal-500 font-bold py-2 px-4 rounded-full">
+          <button className="bg-teal-500 text-sm md:text-md hover:bg-teal-600 text-white py-2 px-4 rounded-full">
             View Profile
           </button>
         </div>
       </div>
 
       <hr className="border-b-2 border-gray-400 mb-8 mx-4" />
-
-      <div className=" flex justify-between content-center px-4 pb-12">
-        <div className="text-left">
-          <p>
-            <Link
-              to="/"
-              className="break-normal text-base md:text-sm text-teal-500 font-bold no-underline hover:underline"
-            >
-              Random News
-            </Link>
-          </p>
-        </div>
-        <div className="text-right">
-          <p>
-            <Link
-              to="/"
-              className="break-normal text-base md:text-sm text-teal-500 font-bold no-underline hover:underline"
-            >
-              Random News
-            </Link>
-          </p>
-        </div>
-      </div>
+      <CommentForm />
+      <CommentItem />
     </div>
   );
 };
