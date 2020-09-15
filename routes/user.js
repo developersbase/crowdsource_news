@@ -23,8 +23,10 @@ router.post("/login", (req, res) => {
       } else {
         if (user.validPassword(req.body.password)) {
           req.session.userID = user._id;
-          user.hash = "";
-          user.salt = "";
+
+          delete user._doc.salt;
+          delete user._doc.hash;
+
           return res.status(201).json(user);
         } else {
           return res
@@ -66,8 +68,8 @@ router.post("/signup", async (req, res, next) => {
         message: "Failed to add user.",
       });
     } else {
-      User.hash = "";
-      User.salt = "";
+      delete User._doc.salt;
+      delete User._doc.hash;
       return res.status(201).json(User);
     }
   });
