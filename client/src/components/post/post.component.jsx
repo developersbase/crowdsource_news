@@ -70,8 +70,16 @@ const Post = ({ getPost, post: { post, loading }, match }) => {
       </div>
 
       <hr className="border-b-2 border-gray-400 mb-8 mx-4" />
-      <CommentForm />
-      <CommentItem />
+      <CommentForm postId={post._id.uuid} />
+      {post.comments
+        .filter((comment) => comment !== null)
+        .map((comment) => (
+          <CommentItem
+            key={comment._id}
+            comment={comment}
+            postId={post._id.uuid}
+          />
+        ))}
     </div>
   );
 };

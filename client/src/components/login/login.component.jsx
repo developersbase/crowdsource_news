@@ -150,7 +150,11 @@ function Login({ login, errors, isAuthenticated }) {
           </div>
           <div className="flex flex-wrap my-6">
             <div className="w-1/2">
-              <a onClick={(e) => e.preventDefault()} className="text-gray-900">
+              <a
+                href="https://www.google.com"
+                onClick={(e) => e.preventDefault()}
+                className="text-gray-900"
+              >
                 <p>Forgot password?</p>
               </a>
             </div>
