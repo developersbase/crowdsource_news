@@ -55,9 +55,9 @@ router.get("/:postUUID", (req, res) => {
 
 router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
   // req.body.post.author = req.user._id, // Store User ObjectId as Author field
-  req.body.post.author = req.session.userID;
+  req.body.author = req.session.userID;
 
-  Post.create(req.body.post, (err) => {
+  Post.create(req.body, (err) => {
     if (err) {
       return console.log(err);
     }

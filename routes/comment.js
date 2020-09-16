@@ -13,9 +13,9 @@ router.put("/new", (req, res) => {
       console.log(err);
       res.redirect("back");
     } else {
-      req.body.comment["author"] = req.session.userID;
+      req.body["author"] = req.session.userID;
 
-      post.comments.unshift(req.body.comment);
+      post.comments.unshift(req.body);
       post.save((err, post) => {
         if (err) return res.status(500).send("Server internal error.");
 
@@ -50,7 +50,7 @@ router.put("/:commentUUID/replies/new", (req, res) => {
   Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
     if (err) return console.log(err);
 
-    req.body.reply["author"] = req.session.userID;
+    req.body["author"] = req.session.userID;
 
     try {
       req.body.reply.upvote == null;
@@ -58,7 +58,7 @@ router.put("/:commentUUID/replies/new", (req, res) => {
     } catch {}
 
     post.comments[findCommentIndex(post, req.params.commentUUID)].replies.push(
-      req.body.reply
+      req.body
     );
     post.save();
 
