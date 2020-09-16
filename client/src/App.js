@@ -5,6 +5,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import Alert from "./components/alert/alert.component";
 import Spinner from "./components/spinner/spinner.component";
 import Feed from "./components/feed/feed.component";
+import PrivateFeed from "./components/private-feed/private-feed.component";
 import Header from "./components/header/header.component";
 import Footer from "./components/footer/footer.component";
 import Publish from "./components/publish/publish.component";
@@ -30,6 +31,7 @@ function App() {
           <ScrollToTop />
           <Switch>
             <Route exact path="/" component={Feed} />
+            <PrivateRoute exact path="/pending" component={PrivateFeed} />
             <PrivateRoute exact path="/publish" component={Publish} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={SignUp} />

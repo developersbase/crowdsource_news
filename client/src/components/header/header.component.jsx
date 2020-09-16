@@ -16,6 +16,9 @@ function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
       <Link to="/publish" className="mr-5 hover:text-gray-900">
         Publish
       </Link>
+      <Link to="/pending" className="mr-5 hover:text-gray-900">
+        Pending
+      </Link>
       <Link onClick={logout} to="/login" className="mr-5 hover:text-gray-900">
         Log Out
       </Link>
