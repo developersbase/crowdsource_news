@@ -72,6 +72,14 @@ var postSchema = new mongoose.Schema({
     lastEdited: { // Epoch
         type: Number,
         required: false
+    },
+    score: {
+        type: Number,
+        default: 0
+    },
+    approved: {
+        type: Boolean,
+        default:false
     }
 });
 
