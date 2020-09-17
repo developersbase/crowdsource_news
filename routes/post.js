@@ -89,7 +89,8 @@ router.delete(
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
+router.use("/:postUUID/comments/", comments);
+//MW.userSession.isLoggedIn,
 
 /* ============================== SEARCH FILTER ============================= */
 

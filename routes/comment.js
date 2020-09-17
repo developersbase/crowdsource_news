@@ -52,10 +52,10 @@ router.put("/:commentUUID/replies/new", (req, res) => {
 
     req.body["author"] = req.session.userID;
 
-    try {
-      req.body.reply.upvote == null;
-      req.body.reply.downvote == null;
-    } catch {}
+    // try {
+    //   req.body.reply.upvote == null;
+    //   req.body.reply.downvote == null;
+    // } catch {}
 
     post.comments[findCommentIndex(post, req.params.commentUUID)].replies.push(
       req.body

@@ -1,4 +1,10 @@
-import { GET_POSTS, GET_POST, POST_ERROR, ADD_COMMENT } from "./posts.types";
+import {
+  GET_POSTS,
+  GET_POST,
+  POST_ERROR,
+  ADD_COMMENT,
+  ADD_REPLY,
+} from "./posts.types";
 
 const initialState = {
   post: null,
@@ -25,6 +31,13 @@ export default function (state = initialState, action) {
       };
 
     case ADD_COMMENT:
+      return {
+        ...state,
+        post: { comments: payload, ...state.post },
+        loading: false,
+      };
+
+    case ADD_REPLY:
       return {
         ...state,
         post: { comments: payload, ...state.post },
