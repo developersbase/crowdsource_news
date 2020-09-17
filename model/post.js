@@ -73,13 +73,23 @@ var postSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    score: {
-        type: Number,
-        default: 0
-    },
-    approved: {
-        type: Boolean,
-        default:false
+    progress: {
+        UV:{
+            type: Number,
+            default: 0
+        },
+        DV:{
+            type: Number,
+            default: 0
+        },
+        score: {
+            type: Number,
+            default: 0
+        },
+        approved: {
+            type: Boolean,
+            default: false
+        }
     }
 });
 
