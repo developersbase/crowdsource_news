@@ -72,6 +72,24 @@ var postSchema = new mongoose.Schema({
     lastEdited: { // Epoch
         type: Number,
         required: false
+    },
+    progress: {
+        UV:{
+            type: Number,
+            default: 0
+        },
+        DV:{
+            type: Number,
+            default: 0
+        },
+        score: {
+            type: Number,
+            default: 0
+        },
+        approved: {
+            type: Boolean,
+            default: false
+        }
     }
 });
 
