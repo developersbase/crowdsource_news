@@ -52,21 +52,19 @@ export const getPost = (id) => async (dispatch) => {
 
 //Add Post
 export const addPost = ({ title, body }) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+  const content = JSON.stringify({ title, body });
+  console.log(content);
   try {
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
-    const content = JSON.stringify({ title, body });
-    console.log(title, body);
-    const res = await axios.post(
-      `/api/posts/new`,
-      content,
-      { withCredentials: true },
-      config
-    );
+    const res = await axios.post(`/api/posts/new`, content, config, {
+      withCredentials: true,
+    });
 
+    console.log(res.data);
     dispatch({
       type: ADD_POST,
       payload: res.data,

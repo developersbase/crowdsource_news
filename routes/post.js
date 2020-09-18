@@ -17,12 +17,14 @@ router.get("/fetch", (req, res) => {
     postProcessor({ title: regex })
       .then((posts) => {
         if (posts.length < 1) {
-          return res.status(404).json({ message: "No Posts Found for Search Query" });
+          return res
+            .status(404)
+            .json({ message: "No Posts Found for Search Query" });
         }
 
         res.status(200).json(posts);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         res.status(400).json({ message: err });
       });
@@ -30,12 +32,14 @@ router.get("/fetch", (req, res) => {
     postProcessor({ title: regex })
       .then((posts) => {
         if (posts.length < 1) {
-          return res.status(404).json({ message: "No Posts Found as Per Request" });
+          return res
+            .status(404)
+            .json({ message: "No Posts Found as Per Request" });
         }
 
         res.status(200).json(posts);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         res.status(400).json({ message: err });
       });
@@ -50,7 +54,7 @@ router.get("/:postUUID", (req, res) => {
       console.log(posts);
       res.status(200).json(posts);
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 });
 
 /* =============================== CREATE POST ============================== */
@@ -63,9 +67,7 @@ router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
       return console.log(err);
     }
 
-    res.status(201).send({
-      message: "ALL OK",
-    });
+    res.status(201).json(req.body);
   });
 });
 
@@ -116,7 +118,8 @@ function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
-function postProcessor(filter) { // Fetch post according to filter and replace Author fields with User Object
+function postProcessor(filter) {
+  // Fetch post according to filter and replace Author fields with User Object
   return new Promise((solve, reject) => {
     Post.find(filter, (err, posts) => {
       if (err) {
@@ -126,22 +129,24 @@ function postProcessor(filter) { // Fetch post according to filter and replace A
 
       // Process Data
 
-      Promise.all(posts.map(async (post) => {
-        await User.findById(post.author, (err, user) => {
-          if (err) {
-            console.log(err);
-            throw "User Find Error";
-          }
-          post = post.toObject();
-          post.author = {
-            username: user.username,
-            avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
-            profile: "/#"
-          };
-        })
+      Promise.all(
+        posts.map(async (post) => {
+          await User.findById(post.author, (err, user) => {
+            if (err) {
+              console.log(err);
+              throw "User Find Error";
+            }
+            post = post.toObject();
+            post.author = {
+              username: user.username,
+              avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
+              profile: "/#",
+            };
+          });
 
-        return post;
-      })).then(posts => solve(posts));
+          return post;
+        })
+      ).then((posts) => solve(posts));
     });
   });
 }

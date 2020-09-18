@@ -22,15 +22,21 @@ const Publish = ({ addPost }) => {
   const onChange = (e) =>
     setContent({ ...content, [e.target.name]: e.target.value });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    addPost(title, body);
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   addPost(title, body);
+  //   console.log(content);
+  // };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    addPost({ title, body });
     console.log(content);
   };
 
   return (
     <div className="flex flex-col container w-full md:max-w-3xl mx-auto">
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => onSubmit(e)}>
         <div class="w-full h-screen">
           <div class="w-full">
             <input
@@ -76,6 +82,10 @@ const Publish = ({ addPost }) => {
       </form>
     </div>
   );
+};
+
+Publish.propTypes = {
+  addPost: PropTypes.func.isRequired,
 };
 
 export default connect(null, { addPost })(Publish);
