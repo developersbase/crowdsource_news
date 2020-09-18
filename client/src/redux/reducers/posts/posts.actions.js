@@ -1,5 +1,11 @@
 import axios from "axios";
-import { GET_POSTS, POST_ERROR, GET_POST, ADD_COMMENT } from "./posts.types";
+import {
+  GET_POSTS,
+  POST_ERROR,
+  GET_POST,
+  ADD_COMMENT,
+  ADD_REPLY,
+} from "./posts.types";
 import { setAlert } from "../alert/alert.actions";
 
 //Get Posts
@@ -66,6 +72,45 @@ export const addComment = (postId, formData) => async (dispatch) => {
     dispatch(
       setAlert("Comment Successfully Posted", "success", "check-circle")
     );
+
+    dispatch(getPost(postId));
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
+      payload: {
+        message: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+//Add Reply
+export const addReply = (postId, commentId, formData) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    console.log(formData);
+    const res = await axios.put(
+      `/api/posts/${postId}/comments/${commentId}/replies/new`,
+      formData,
+      config
+    );
+    console.log(res.data);
+
+    dispatch({
+      type: ADD_REPLY,
+      payload: res.data,
+    });
+
+    dispatch(
+      setAlert("Comment Successfully Posted", "success", "check-circle")
+    );
+
+    dispatch(getPost(postId));
   } catch (error) {
     dispatch({
       type: POST_ERROR,

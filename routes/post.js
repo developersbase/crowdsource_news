@@ -89,9 +89,26 @@ router.delete(
   }
 );
 
+/* ============================= UPVOTES & DOWNVOTES ROUTES ============================= */
+
+router.put(
+  "/:postUUID/vote",
+  MW.userSession.isLoggedIn,
+  (req, res) => {
+    Post.findOneAndUpdate({ "_id.uuid": req.params.postUUID }, req.body.vote, (err, data) => {
+      if (err) {
+        res.status(400).send({ message: "voting failed" });
+        return console.log(err);
+      } else {
+        res.send(200).send({ message: "voting successful" });
+      }
+    })
+  });
+
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
+router.use("/:postUUID/comments/", comments);
+//MW.userSession.isLoggedIn,
 
 /* ============================== HELPER FUNCTIONS ============================= */
 
