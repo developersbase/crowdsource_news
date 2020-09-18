@@ -3,6 +3,7 @@ import {
   GET_POSTS,
   POST_ERROR,
   GET_POST,
+  ADD_POST,
   ADD_COMMENT,
   ADD_REPLY,
 } from "./posts.types";
@@ -49,6 +50,40 @@ export const getPost = (id) => async (dispatch) => {
   }
 };
 
+//Add Post
+export const addPost = ({ title, body }) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const content = JSON.stringify({ title, body });
+    console.log(title, body);
+    const res = await axios.post(
+      `/api/posts/new`,
+      content,
+      { withCredentials: true },
+      config
+    );
+
+    dispatch({
+      type: ADD_POST,
+      payload: res.data,
+    });
+
+    dispatch(setAlert("Post Successfully Posted", "success", "check-circle"));
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
+      payload: {
+        message: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
 //Add Comment
 export const addComment = (postId, formData) => async (dispatch) => {
   try {
@@ -61,6 +96,7 @@ export const addComment = (postId, formData) => async (dispatch) => {
     const res = await axios.put(
       `/api/posts/${postId}/comments/new`,
       formData,
+      { withCredentials: true },
       config
     );
 
@@ -106,9 +142,7 @@ export const addReply = (postId, commentId, formData) => async (dispatch) => {
       payload: res.data,
     });
 
-    dispatch(
-      setAlert("Comment Successfully Posted", "success", "check-circle")
-    );
+    dispatch(setAlert("Reply Successfully Posted", "success", "check-circle"));
 
     dispatch(getPost(postId));
   } catch (error) {

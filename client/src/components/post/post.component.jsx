@@ -14,7 +14,7 @@ import "./post.styles.scss";
 const Post = ({
   getPost,
   post: { post, loading },
-  auth: { isAuthenticated },
+  auth: { user, isAuthenticated },
   match,
 }) => {
   useEffect(() => {
@@ -85,7 +85,7 @@ const Post = ({
               />
               <div className="flex-1 px-2">
                 <p className="text-base md:text-xl leading-none mb-2">
-                  {post.author}
+                  {user._id === post.author ? user.username : null}
                 </p>
               </div>
               <div className="justify-end">

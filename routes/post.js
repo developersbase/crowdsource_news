@@ -55,8 +55,7 @@ router.get("/:postUUID", (req, res) => {
 
 router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
   // req.body.post.author = req.user._id, // Store User ObjectId as Author field
-  req.body.author = req.session.userID;
-
+  req.body["author"] = req.session.userID;
   Post.create(req.body, (err) => {
     if (err) {
       return console.log(err);
@@ -89,23 +88,24 @@ router.delete(
 
 /* ============================= UPVOTES & DOWNVOTES ROUTES ============================= */
 
-router.put(
-  "/:postUUID/vote",
-  MW.userSession.isLoggedIn,
-  (req, res) => {
-    Post.findOneAndUpdate({ "_id.uuid": req.params.postUUID }, req.body.vote, (err, data) => {
+router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
+  Post.findOneAndUpdate(
+    { "_id.uuid": req.params.postUUID },
+    req.body.vote,
+    (err, data) => {
       if (err) {
         res.status(400).send({ message: "voting failed" });
         return console.log(err);
       } else {
         res.send(200).send({ message: "voting successful" });
       }
-    })
-  });
+    }
+  );
+});
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", comments);
+router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
 //MW.userSession.isLoggedIn,
 
 /* ============================== SEARCH FILTER ============================= */

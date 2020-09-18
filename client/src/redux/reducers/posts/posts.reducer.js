@@ -1,6 +1,7 @@
 import {
   GET_POSTS,
   GET_POST,
+  ADD_POST,
   POST_ERROR,
   ADD_COMMENT,
   ADD_REPLY,
@@ -27,6 +28,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         post: payload,
+        loading: false,
+      };
+
+    case ADD_POST:
+      return {
+        ...state,
+        posts: [payload, ...state.posts],
         loading: false,
       };
 
