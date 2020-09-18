@@ -1,6 +1,7 @@
 const express = require("express");
 
-const Post = require("../model/post"); // Model
+const Post = require("../model/post"); // Post Model
+const User = require("../model/user"); // User Model
 const comments = require("./comment"); // Route
 const MW = require("../middleware/middleware"); // Middlewares
 
@@ -12,43 +13,44 @@ router.get("/fetch", (req, res) => {
   // Returns list of News Thumbnails/Previews
   if (req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), "gi");
-    //get all posts
-    Post.find({ title: regex }, (err, posts) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server Internal Error" });
-      } else {
-        if (allposts.length < 1) {
-          res.status(404).json({ message: "No Posts Found for Search Query" });
+
+    postProcessor({ title: regex })
+      .then((posts) => {
+        if (posts.length < 1) {
+          return res.status(404).json({ message: "No Posts Found for Search Query" });
         }
+
         res.status(200).json(posts);
-      }
-    });
-  } else {
-    Post.find({}, (err, posts) => {
-      if (err) {
+      })
+      .catch(err => {
         console.log(err);
-        res.status(500).json({ message: "Server Internal Error" });
-      } else {
+        res.status(400).json({ message: err });
+      });
+  } else {
+    postProcessor({ title: regex })
+      .then((posts) => {
+        if (posts.length < 1) {
+          return res.status(404).json({ message: "No Posts Found as Per Request" });
+        }
+
         res.status(200).json(posts);
-      }
-    });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json({ message: err });
+      });
   }
 });
 
 /* =========================== FETCH POST BY UUID =========================== */
 
 router.get("/:postUUID", (req, res) => {
-  Post.findOne({ "_id.uuid": req.params.postUUID }, (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).send({ message: "Find Error" });
-    }
-
-    // Process Data
-
-    res.status(200).json(data.toJSON());
-  });
+  postProcessor({ "_id.uuid": req.params.postUUID })
+    .then((posts) => {
+      console.log(posts);
+      res.status(200).json(posts);
+    })
+    .catch(err => console.log(err));
 });
 
 /* =============================== CREATE POST ============================== */
@@ -108,10 +110,40 @@ router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
 router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
 //MW.userSession.isLoggedIn,
 
-/* ============================== SEARCH FILTER ============================= */
+/* ============================== HELPER FUNCTIONS ============================= */
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
+function postProcessor(filter) { // Fetch post according to filter and replace Author fields with User Object
+  return new Promise((solve, reject) => {
+    Post.find(filter, (err, posts) => {
+      if (err) {
+        console.log(err);
+        reject("Post Find Error");
+      }
+
+      // Process Data
+
+      Promise.all(posts.map(async (post) => {
+        await User.findById(post.author, (err, user) => {
+          if (err) {
+            console.log(err);
+            throw "User Find Error";
+          }
+          post = post.toObject();
+          post.author = {
+            username: user.username,
+            avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
+            profile: "/#"
+          };
+        })
+
+        return post;
+      })).then(posts => solve(posts));
+    });
+  });
 }
 
 module.exports = router;
