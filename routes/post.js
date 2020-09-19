@@ -29,7 +29,7 @@ router.get("/fetch", (req, res) => {
         res.status(400).json({ message: err });
       });
   } else {
-    postProcessor({ title: regex })
+    postProcessor({})
       .then((posts) => {
         if (posts.length < 1) {
           return res
@@ -138,7 +138,7 @@ function postProcessor(filter) {
             }
             post = post.toObject();
             post.author = {
-              username: user.username,
+              username: user ? user.username : "Deleted User",
               avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
               profile: "/#",
             };
