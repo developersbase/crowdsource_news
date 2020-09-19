@@ -85,7 +85,7 @@ const Post = ({
               />
               <div className="flex-1 px-2">
                 <p className="text-base md:text-xl leading-none mb-2">
-                  {user._id === post.author ? user.username : null}
+                  {post.author.username}
                 </p>
               </div>
               <div className="justify-end">
