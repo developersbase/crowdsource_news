@@ -51,7 +51,6 @@ router.get("/fetch", (req, res) => {
 router.get("/:postUUID", (req, res) => {
   postProcessor({ "_id.uuid": req.params.postUUID })
     .then((posts) => {
-      console.log(posts);
       res.status(200).json(posts[0]);
     })
     .catch((err) => console.log(err));
