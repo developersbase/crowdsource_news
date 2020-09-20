@@ -156,13 +156,22 @@ router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
 
       res.status(200).json({ message: "Vote Action Success" });
     })
-  }
-  );
+  });
 });
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
+router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, (req, res, next) => {
+  Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ message: "Post Find Error on Comment action." });
+    }
+
+    req.body.post = post;
+    next()
+  })
+}, comments);
 //MW.userSession.isLoggedIn,
 
 /* ============================== HELPER FUNCTIONS ============================= */
