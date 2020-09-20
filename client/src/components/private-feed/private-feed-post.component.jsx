@@ -80,11 +80,3 @@ PrivateFeedPost.propTypes = {
 //const mapStateToProps = (state) => ({});
 
 //export default connect(mapStateToProps, mapDispatchToProps)(FeedPost);
-{
-  /* <div className="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-        <span className="tracking-widest text-gray-900">Corona</span>
-        <span className="mt-1 text-gray-500 text-sm">
-          {date}/{month}/{year}
-        </span>
-      </div> */
-}
