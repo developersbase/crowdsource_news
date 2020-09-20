@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
+const { v4: uuidv4 } = require("uuid");
 
 const Post = require("../model/post"); // Model
 const MW = require("../middleware/middleware"); // Middlewares
@@ -11,9 +12,10 @@ router.put("/new", (req, res) => {
     console.log(req.params.postUUID);
     if (err) {
       console.log(err);
-      res.redirect("back");
+      res.status(400).json({message: "Post Find Error"});
     } else {
       req.body["author"] = req.session.userID;
+      req.body["_id"] = uuidv4();
 
       post.comments.unshift(req.body);
       post.save((err, post) => {
@@ -51,6 +53,7 @@ router.put("/:commentUUID/replies/new", (req, res) => {
     if (err) return console.log(err);
 
     req.body["author"] = req.session.userID;
+    req.body["_id"] = uuidv4();
 
     // try {
     //   req.body.reply.upvote == null;
@@ -70,6 +73,8 @@ router.put("/:commentUUID/replies/new", (req, res) => {
 /* ============================ HELPER FUNCTIONS ============================ */
 
 function findCommentIndex(post, commentUUID) {
+  console.log(commentUUID);
+  console.log(`Comment Index is ${post.comments.findIndex((comment) => comment._id == commentUUID)}`);
   return post.comments.findIndex((comment) => comment._id == commentUUID);
 }
 
