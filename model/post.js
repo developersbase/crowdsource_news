@@ -74,12 +74,12 @@ var postSchema = new mongoose.Schema({
     },
     progress: {
         upvotes:{
-            type: Number,
-            default: 0
+            type: Array,
+            default: [String]
         },
         downvotes:{
-            type: Number,
-            default: 0
+            type: Array,
+            default: [String]
         },
         score: {
             type: Number,

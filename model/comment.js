@@ -13,12 +13,12 @@ var commentSchema = new mongoose.Schema({
     required: true
   },
   upvotes: {
-    type: Number,
-    default: 0
+    type: Array,
+    default: [String]
   },
   downvotes: {
-    type: Number,
-    default: 0
+    type: Array,
+    default: [String]
   }
 });
 

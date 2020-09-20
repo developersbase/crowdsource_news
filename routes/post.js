@@ -5,6 +5,7 @@ const Post = require("../model/post"); // Post Model
 const User = require("../model/user"); // User Model
 const comments = require("./comment"); // Route
 const MW = require("../middleware/middleware"); // Middlewares
+const e = require("express");
 
 const router = express.Router();
 
@@ -106,23 +107,71 @@ router.delete(
 /* ============================= UPVOTES & DOWNVOTES ROUTES ============================= */
 
 router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
-  Post.findOneAndUpdate(
-    { "_id.uuid": req.params.postUUID },
-    req.body.vote,
-    (err, data) => {
-      if (err) {
-        res.status(400).send({ message: "voting failed" });
-        return console.log(err);
+  Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
+    if (err) {
+      res.status(400).send({ message: "Post Fetch Failed on Vote" });
+      return console.log(err);
+    }
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////
+      (a) Check Vote Polarity at first.
+      (b) If user hasn't Voted in this polarity, Check if voted in the inverse polarity.
+      (c) If not voted in inverse polarity, simply add vote to current polarity.
+      (d) Else remove from inverse polarity and add to current polarity.
+    *////////////////////////////////////////////////////////////////////////////////////////////
+
+    if (req.body.votePolarity > 0) { // Upvote Request
+      let index = post.progress.upvotes.findIndex(voterID => voterID == req.session.userID);
+      let invIndex = post.progress.downvotes.findIndex(voterID => voterID == req.session.userID);
+
+      if (index == -1) {
+        invIndex == -1
+          ?
+          post.progress.upvotes.unshift(req.session.userID)
+          :
+          post.progress.upvotes.unshift(post.progress.downvotes.splice(invIndex, 1)[0]);
       } else {
-        res.send(200).send({ message: "voting successful" });
+        post.progress.upvotes.splice(index, 1);
+      }
+    } else { // Downvote Request
+      let index = post.progress.downvotes.findIndex(voterID => voterID == req.session.userID);
+      let invIndex = post.progress.upvotes.findIndex(voterID => voterID == req.session.userID);
+
+      if (index == -1) {
+        invIndex == -1
+          ?
+          post.progress.downvotes.unshift(req.session.userID)
+          :
+          post.progress.downvotes.unshift(post.progress.upvotes.splice(invIndex, 1)[0]);
+      } else {
+        post.progress.downvotes.splice(index, 1);
       }
     }
-  );
+
+    post.save((err) => {
+      if (err) {
+        res.status(500).send({ message: "Post Save Failed on Vote" });
+        return console.log(err);
+      }
+
+      res.status(200).json({ message: "Vote Action Success" });
+    })
+  });
 });
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, comments);
+router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, (req, res, next) => {
+  Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ message: "Post Find Error on Comment action." });
+    }
+
+    req.body.post = post;
+    next()
+  })
+}, comments);
 //MW.userSession.isLoggedIn,
 
 /* ============================== HELPER FUNCTIONS ============================= */
@@ -149,12 +198,16 @@ function postProcessor(filter) {
               console.log(err);
               throw "User Find Error";
             }
+
             post = post.toObject();
             post.author = {
               username: user ? user.username : "Deleted User",
               avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
               profile: "/#",
             };
+
+            post.progress.upvotes = post.progress.upvotes.length;
+            post.progress.downvotes = post.progress.downvotes.length;
           });
 
           return post;
