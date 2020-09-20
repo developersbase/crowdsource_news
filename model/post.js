@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 
 const Comment = require('./comment');
 
@@ -8,36 +7,36 @@ var postSchema = new mongoose.Schema({
         created: {
             year: {
                 type: Number,
-                default: new Date().getFullYear()
+                required: true
             },
             month: {
                 type: Number,
-                default: new Date().getMonth()
+                required: true
             },
             date: {
                 type: Number,
-                default: new Date().getDate()
+                required: true
             },
             day: {
                 type: Number,
-                default: new Date().getDay()
+                required: true
             },
             hour: {
                 type: Number,
-                default: new Date().getHours()
+                required: true
             },
             minute: {
                 type: Number,
-                default: new Date().getMinutes()
+                required: true
             },
             seconds: {
                 type: Number,
-                default: new Date().getSeconds()
+                required: true
             }
         },
         uuid: {
             type: String,
-            default: uuidv4()
+            required: true
         },
     },
 
@@ -74,11 +73,11 @@ var postSchema = new mongoose.Schema({
         required: false
     },
     progress: {
-        UV:{
+        upvotes:{
             type: Number,
             default: 0
         },
-        DV:{
+        downvotes:{
             type: Number,
             default: 0
         },

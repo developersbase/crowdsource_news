@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
 
 var commentSchema = new mongoose.Schema({
   _id: {
     type: String,
-    default: uuidv4()
+    required: true
   },
   author: {
     type: mongoose.Types.ObjectId
