@@ -68,14 +68,13 @@ MW.helper.authorBuilder = function (user) {
 
 MW.helper.voteChecker = function (element, req) {
   try {
-    console.log(element.upvotes);
     if (element.upvotes.findIndex(entry => entry == req.session.userID) != -1) {
       return 1;
     } else if (element.downvotes.findIndex(entry => entry == req.session.userID) != -1) {
       return -1;
     }
+    throw "None Voted";
   } catch (e) {
-    console.log(e);
     return 0;
   }
 }
