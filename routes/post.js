@@ -1,4 +1,5 @@
 const express = require("express");
+const { v4: uuidv4 } = require('uuid');
 
 const Post = require("../model/post"); // Post Model
 const User = require("../model/user"); // User Model
@@ -60,7 +61,20 @@ router.get("/:postUUID", (req, res) => {
 
 router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
   // req.body.post.author = req.user._id, // Store User ObjectId as Author field
-  req.body["author"] = req.session.userID;
+  req.body.author = req.session.userID;
+  req.body._id = {
+    created: {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth(),
+      date: new Date().getDate(),
+      day: new Date().getDay(),
+      hour: new Date().getHours(),
+      minute: new Date().getMinutes(),
+      seconds: new Date().getSeconds()
+    },
+    uuid: uuidv4()
+  };
+
   Post.create(req.body, (err) => {
     if (err) {
       return console.log(err);
