@@ -19,7 +19,7 @@ const PrivateFeed = ({ getPosts, post: { posts, loading } }) => {
     <Spinner />
   ) : (
     <section className="text-gray-700 overflow-hidden feed">
-      <div className="container px-8 lg:px-32 py-24 mx-auto">
+      <div className="container px-8 lg:px-20 py-24 mx-auto">
         {posts.map((post) => (
           <FeedPost key={post._id.uuid} post={post} />
         ))}

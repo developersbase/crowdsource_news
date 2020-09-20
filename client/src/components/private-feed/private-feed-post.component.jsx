@@ -35,7 +35,9 @@ const PrivateFeedPost = ({ post: { _id, title, body } }) => {
 
       <div className="md:flex-grow">
         <h2 className="text-2xl text-gray-900">{title}</h2>
-        <p className="leading-relaxed">{body}</p>
+        <p className="leading-relaxed">
+          {body.length > 100 ? body.substring(0, 100) + "..." : body}
+        </p>
         <Link to={`/${_id.uuid}`} className="text-indigo-500 mt-4">
           Read News <i className="fas fa-arrow-right"></i>
         </Link>{" "}

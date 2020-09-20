@@ -7,9 +7,9 @@ import { logout } from "../../redux/reducers/auth/auth.actions";
 
 import "./header.styles.scss";
 
-function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
+function Header({ auth: { isAuthenticated, loading, user }, logout }) {
   const authLinks = (
-    <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
+    <nav className="md:ml-auto flex flex-wrap items-center justify-center">
       <Link to="/" className="mr-5 hover:text-gray-900">
         Feed
       </Link>
@@ -19,8 +19,13 @@ function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
       <Link to="/pending" className="mr-5 hover:text-gray-900">
         Pending
       </Link>
-      <Link onClick={logout} to="/login" className="mr-5 hover:text-gray-900">
-        Log Out
+      <Link
+        onClick={logout}
+        to="/login"
+        className="mr-5 hover:text-gray-900 flex items-center justify-center"
+      >
+        <i className="fas fa-sign-out-alt px-1"></i>
+        <span>Log Out</span>
       </Link>
       {user ? <p>Hi, {user.username}</p> : <></>}
     </nav>
@@ -51,7 +56,7 @@ function Header({ auth: { isAuthenticated, laoding, user }, logout }) {
             </Link>
           </span>
         </span>
-        {!laoding && <>{isAuthenticated ? authLinks : guestLinks}</>}
+        {!loading && isAuthenticated ? authLinks : guestLinks}
       </div>
     </header>
   );

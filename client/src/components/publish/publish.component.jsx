@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 //import { Editor } from "@tinymce/tinymce-react";
 
 import { addPost } from "../../redux/reducers/posts/posts.actions";
@@ -14,6 +15,9 @@ const Publish = ({ addPost }) => {
     title: "",
     body: "",
   });
+
+  const [isToggled, setToggled] = useState(false);
+  const toggleButton = () => setToggled(!isToggled);
 
   const { title, body } = content;
 
@@ -33,8 +37,13 @@ const Publish = ({ addPost }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     addPost({ title, body });
+    toggleButton();
     console.log(content);
   };
+
+  if (isToggled) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className="flex flex-col container w-full md:max-w-3xl mx-auto ">
