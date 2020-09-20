@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Editor } from "@tinymce/tinymce-react";
+//import { Editor } from "@tinymce/tinymce-react";
 
 import { addPost } from "../../redux/reducers/posts/posts.actions";
+
+import "./publish.styles.scss";
 
 const Publish = ({ addPost }) => {
   // const [content, setContent] = useState("Write Here...");
@@ -35,12 +37,12 @@ const Publish = ({ addPost }) => {
   };
 
   return (
-    <div className="flex flex-col container w-full md:max-w-3xl mx-auto">
+    <div className="flex flex-col container w-full md:max-w-3xl mx-auto ">
       <form onSubmit={(e) => onSubmit(e)}>
-        <div class="w-full h-screen">
-          <div class="w-full">
+        <div className="w-full h-screen">
+          <div className="w-full">
             <input
-              class="w-full bg-gray-100 rounded focus:border-l-4 text-5xl px-4 py-4"
+              className="w-full bg-gray-100 rounded text-5xl px-4 py-4 placeholder"
               placeholder="Title"
               type="text"
               name="title"
@@ -48,9 +50,9 @@ const Publish = ({ addPost }) => {
               onChange={(e) => onChange(e)}
             />
           </div>
-          <div class="w-full">
+          <div className="w-full">
             <textarea
-              class="w-full bg-gray-100 rounded focus:outline-none h-48 focus:border-indigo-500 text-base px-4 resize-none block"
+              className="w-full bg-gray-100 rounded focus:outline-none h-48 focus:border-indigo-500 text-base px-4 resize-none block placeholder"
               placeholder="Message"
               name="body"
               value={body}
@@ -77,7 +79,7 @@ const Publish = ({ addPost }) => {
         <input
           type="submit"
           value="Submit"
-          className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5"
+          className="flex cursor-pointer mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg m-5"
         />
       </form>
     </div>

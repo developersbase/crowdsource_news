@@ -14,7 +14,7 @@ import "./post.styles.scss";
 const Post = ({
   getPost,
   post: { post, loading },
-  auth: { user, isAuthenticated },
+  auth: { isAuthenticated },
   match,
 }) => {
   useEffect(() => {
@@ -99,17 +99,15 @@ const Post = ({
             {isAuthenticated ? (
               <CommentForm postId={post._id.uuid} />
             ) : (
-              <p className="px-2">Log in to post a comment</p>
+              <p className="p-4">Log in to post a comment</p>
             )}
-            {post.comments
-              .filter((comment) => comment !== null)
-              .map((comment) => (
-                <CommentItem
-                  key={comment._id}
-                  comment={comment}
-                  postId={post._id.uuid}
-                />
-              ))}
+            {post.comments.map((comment) => (
+              <CommentItem
+                key={comment._id}
+                comment={comment}
+                postId={post._id.uuid}
+              />
+            ))}
           </div>
         </div>
       </div>

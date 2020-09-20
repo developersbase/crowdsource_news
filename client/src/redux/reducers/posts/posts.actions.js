@@ -71,6 +71,7 @@ export const addPost = ({ title, body }) => async (dispatch) => {
     });
 
     dispatch(setAlert("Post Successfully Posted", "success", "check-circle"));
+    dispatch(getPosts());
   } catch (error) {
     dispatch({
       type: POST_ERROR,
@@ -131,6 +132,7 @@ export const addReply = (postId, commentId, formData) => async (dispatch) => {
     const res = await axios.put(
       `/api/posts/${postId}/comments/${commentId}/replies/new`,
       formData,
+      { withCredentials: true },
       config
     );
     console.log(res.data);

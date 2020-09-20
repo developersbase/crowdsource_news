@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 //import PropTypes from "prop-types";
 
 const ReplyItem = ({ reply: { body } }) => {
@@ -9,7 +9,9 @@ const ReplyItem = ({ reply: { body } }) => {
           <a
             href="https://www.google.com/"
             className="block rounded-full h-12 w-12 mr-2 bg-gray-300"
-          ></a>
+          >
+            .
+          </a>
         </div>
         <div className="w-7/8">
           <div>
@@ -18,7 +20,6 @@ const ReplyItem = ({ reply: { body } }) => {
                 Asif
               </a>
             </span>
-            <span className="text-gray-700">@asif10388</span>
             <span className="text-gray-700">·</span>
             <span className="text-gray-700">Sept 15</span>
           </div>

@@ -30,10 +30,9 @@ const CommentItem = ({ post: { post }, comment: { body, author, _id } }) => {
             <div>
               <span>
                 <a href="https://www.google.com/" className="text-black">
-                  {author}
+                  Nothing
                 </a>
               </span>
-              <span className="text-gray-700">{_id}</span>
               <span className="text-gray-700">·</span>
               <span className="text-gray-700">Sept 15</span>
             </div>
@@ -74,17 +73,15 @@ const CommentItem = ({ post: { post }, comment: { body, author, _id } }) => {
                 </a>
               </span>
             </div>
-            {/* <hr className="border-b" /> */}
-            {post.comments[findCommentIndex(post, _id)].replies
-              .filter((reply) => reply !== null)
-              .map((reply) => (
-                <ReplyItem key={reply._id} reply={reply} commentId={_id} />
-              ))}
+            <hr className="border-b w-full" />
+            {post.comments[findCommentIndex(post, _id)].replies.map((reply) => (
+              <ReplyItem key={reply._id} reply={reply} commentId={_id} />
+            ))}
             {isToggled ? (
               <ReplyForm postId={post._id.uuid} commentId={_id} />
             ) : null}
 
-            {/* <hr className="border-b" /> */}
+            <hr className="border-b w-full" />
           </div>
         </div>
       </div>
