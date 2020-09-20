@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 
 import { login } from "../../redux/reducers/auth/auth.actions";
 
-function Login({ login, errors, isAuthenticated }) {
+function Login({ login, isAuthenticated }) {
   const formik = useFormik({
     initialValues: {
       email: "",

@@ -30,7 +30,7 @@ const CommentItem = ({ post: { post }, comment: { body, author, _id } }) => {
             <div>
               <span>
                 <a href="https://www.google.com/" className="text-black">
-                  Nothing
+                  {post.author.username} --- {author}
                 </a>
               </span>
               <span className="text-gray-700">·</span>
