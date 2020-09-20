@@ -5,6 +5,7 @@ const MW = {
   userSession: {},
   posts: {},
   comments: {},
+  helper : {}
 };
 
 /* ====================== USER SESSION MIDDLEWARES ===================== */
@@ -50,4 +51,37 @@ MW.comments.checkAuthor = (req, res, next) => {
     } else res.status(403).send({ message: "User Unauthorized." });
   });
 };
+
+/* =========================== HELPER MIDDLEWARES =========================== */
+
+MW.helper.authorBuilder = function (user) {
+  return user ? {
+    username: user.username,
+    avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
+    profile: "/#"
+  } : {
+      username: "Deleted User",
+      avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
+      profile: "/#"
+    }
+}
+
+MW.helper.voteChecker = function (element, req) {
+  try {
+    console.log(element.upvotes);
+    if (element.upvotes.findIndex(entry => entry == req.session.userID) != -1) {
+      return 1;
+    } else if (element.downvotes.findIndex(entry => entry == req.session.userID) != -1) {
+      return -1;
+    }
+  } catch (e) {
+    console.log(e);
+    return 0;
+  }
+}
+
+MW.helper.findCommentIndex = function (post, commentUUID) {
+  return post.comments.findIndex((comment) => comment._id == commentUUID);
+}
+
 module.exports = MW;

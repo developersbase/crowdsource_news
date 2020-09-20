@@ -2,11 +2,37 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const { v4: uuidv4 } = require("uuid");
 
-const MW = require("../middleware/middleware"); // Middlewares
+const { comments: commentsMW, helper, userSession } = require("../middleware/middleware"); // Middlewares
+const User = require("../model/user");
+
+const FETCH_COUNT = Number(process.env.FETCH_COUNT);
+
+/* ============================== GET COMMENTS ============================== */
+
+router.get("/fetch", async (req, res) => {
+  let comIndex = req.body.commentsCount;
+  let comments = req.body.post.toObject().comments.slice(comIndex, comIndex + FETCH_COUNT);
+
+  for (
+    comIndex;
+    comIndex < comments.length;
+    comIndex++
+  ) {
+    await User.findById(comments[comIndex].author).then((user) => {
+      delete comments[comIndex].replies;
+
+      comments[comIndex].author = helper.authorBuilder(user);
+      comments[comIndex].selfVote = helper.voteChecker(comments[comIndex], req);
+    }).catch(err => res.status(400).json({ message: err }));
+  }
+
+  comIndex = req.body.commentsCount;
+  return res.status(200).json(comments);
+});
 
 /* =============================== MAKE COMMENT ============================== */
 
-router.put("/new", (req, res) => {
+router.put("/new", userSession.isLoggedIn, (req, res) => {
   let post = req.body.post;
 
   req.body["author"] = req.session.userID;
@@ -22,7 +48,7 @@ router.put("/new", (req, res) => {
 
 /* ============================= DELETE COMMENT ============================= */
 
-router.delete("/:commentUUID", MW.comments.checkAuthor, (req, res) => {
+router.delete("/:commentUUID", userSession.isLoggedIn, commentsMW.checkAuthor, (req, res) => {
   let post = req.body.post;
 
   post.comments.splice(findCommentIndex(post, req.params.commentUUID), 1);
@@ -32,15 +58,39 @@ router.delete("/:commentUUID", MW.comments.checkAuthor, (req, res) => {
   });
 });
 
+/* =============================== GET REPLIES ============================== */
+
+router.get("/:commentUUID/replies/fetch", async (req, res) => {
+  let replies = req.body.post.toObject().comments[helper.findCommentIndex(req.body.post, req.params.commentUUID)].replies.slice(repIndex, repIndex + FETCH_COUNT);
+  let repIndex = req.body.repliesCount;
+
+  for (
+    repIndex;
+    repIndex < replies.length;
+    repIndex++
+  ) {
+    await User.findById(replies[repIndex].author).then((user) => {
+      replies[repIndex].author = helper.authorBuilder(user);
+      replies[repIndex].selfVote = helper.voteChecker(replies[repIndex], req);
+    }).catch(err => res.status(400).json({ message: err }));
+  }
+
+  repIndex = req.body.repliesCount;
+
+  console.log(repIndex, repIndex + FETCH_COUNT);
+
+  return res.status(200).json(replies.slice(repIndex, repIndex + FETCH_COUNT));
+});
+
 /* =============================== MAKE REPLY =============================== */
 
-router.put("/:commentUUID/replies/new", (req, res) => {
+router.put("/:commentUUID/replies/new", userSession.isLoggedIn, (req, res) => {
   let post = req.body.post;
 
   req.body["author"] = req.session.userID;
   req.body["_id"] = uuidv4();
 
-  post.comments[findCommentIndex(post, req.params.commentUUID)].replies.push(
+  post.comments[helper.findCommentIndex(post, req.params.commentUUID)].replies.push(
     req.body
   );
   post.save();
@@ -50,9 +100,9 @@ router.put("/:commentUUID/replies/new", (req, res) => {
 
 /* ============================= COMMENT VOTING ============================= */
 
-router.put("/:commentUUID/vote", (req, res) => {
+router.put("/:commentUUID/vote", userSession.isLoggedIn, (req, res) => {
   let post = req.body.post;
-  let ind = findCommentIndex(post, req.params.commentUUID);
+  let ind = helper.findCommentIndex(post, req.params.commentUUID);
   let commentReference = post.comments[ind];
 
   if (req.body.votePolarity > 0) { // Upvote Request
@@ -92,11 +142,5 @@ router.put("/:commentUUID/vote", (req, res) => {
     res.status(200).json({ message: "Vote Action Success" });
   });
 });
-
-/* ============================ HELPER FUNCTIONS ============================ */
-
-function findCommentIndex(post, commentUUID) {
-  return post.comments.findIndex((comment) => comment._id == commentUUID);
-}
 
 module.exports = router;

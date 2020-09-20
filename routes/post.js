@@ -3,9 +3,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const Post = require("../model/post"); // Post Model
 const User = require("../model/user"); // User Model
-const comments = require("./comment"); // Route
-const MW = require("../middleware/middleware"); // Middlewares
-const e = require("express");
+
+const comments = require("./comment"); // Comments Route
+const { posts: postsMW, helper, userSession } = require("../middleware/middleware"); // Middlewares
+
+const FETCH_COUNT = Number(process.env.FETCH_COUNT);
 
 const router = express.Router();
 
@@ -16,7 +18,7 @@ router.get("/fetch", (req, res) => {
   if (req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), "gi");
 
-    postProcessor({ title: regex })
+    postProcessor({ title: regex }, req)
       .then((posts) => {
         if (posts.length < 1) {
           return res
@@ -31,7 +33,7 @@ router.get("/fetch", (req, res) => {
         res.status(400).json({ message: err });
       });
   } else {
-    postProcessor({})
+    postProcessor({}, req)
       .then((posts) => {
         if (posts.length < 1) {
           return res
@@ -51,8 +53,9 @@ router.get("/fetch", (req, res) => {
 /* =========================== FETCH POST BY UUID =========================== */
 
 router.get("/:postUUID", (req, res) => {
-  postProcessor({ "_id.uuid": req.params.postUUID })
+  postProcessor({ "_id.uuid": req.params.postUUID }, req)
     .then((posts) => {
+      // console.log(posts);
       res.status(200).json(posts[0]);
     })
     .catch((err) => console.log(err));
@@ -60,7 +63,7 @@ router.get("/:postUUID", (req, res) => {
 
 /* =============================== CREATE POST ============================== */
 
-router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
+router.post("/new", userSession.isLoggedIn, (req, res) => {
   // req.body.post.author = req.user._id, // Store User ObjectId as Author field
   req.body.author = req.session.userID;
   req.body._id = {
@@ -81,7 +84,7 @@ router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
       return console.log(err);
     }
 
-    res.status(201).json(req.body);
+    res.status(200).json(req.body);
   });
 });
 
@@ -89,8 +92,8 @@ router.post("/new", MW.userSession.isLoggedIn, (req, res) => {
 
 router.delete(
   "/:postUUID",
-  MW.userSession.isLoggedIn,
-  MW.posts.checkAuthor,
+  userSession.isLoggedIn,
+  postsMW.checkAuthor,
   (req, res) => {
     Post.remove({ "_id.uuid": req.params.postUUID }, (err) => {
       if (err) {
@@ -106,7 +109,7 @@ router.delete(
 
 /* ============================= UPVOTES & DOWNVOTES ROUTES ============================= */
 
-router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
+router.put("/:postUUID/vote", userSession.isLoggedIn, (req, res) => {
   Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
     if (err) {
       res.status(400).send({ message: "Post Fetch Failed on Vote" });
@@ -161,7 +164,7 @@ router.put("/:postUUID/vote", MW.userSession.isLoggedIn, (req, res) => {
 
 /* ======================= COMMENTS & REPLIES HANDLING ====================== */
 
-router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, (req, res, next) => {
+router.use("/:postUUID/comments/", (req, res, next) => {
   Post.findOne({ "_id.uuid": req.params.postUUID }, (err, post) => {
     if (err) {
       console.log(err);
@@ -172,7 +175,7 @@ router.use("/:postUUID/comments/", MW.userSession.isLoggedIn, (req, res, next) =
     next()
   })
 }, comments);
-//MW.userSession.isLoggedIn,
+//userSession.isLoggedIn,
 
 /* ============================== HELPER FUNCTIONS ============================= */
 
@@ -180,39 +183,34 @@ function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
-function postProcessor(filter) {
+function postProcessor(filter, req) {
   // Fetch post according to filter and replace Author fields with User Object
   return new Promise((solve, reject) => {
-    Post.find(filter, (err, posts) => {
+    Post.find(filter, async (err, posts) => {
       if (err) {
         console.log(err);
         reject("Post Find Error");
       }
 
-      // Process Data
+      let postIndex = req.body.postsCount;
+      posts = posts.slice(postIndex, postIndex + FETCH_COUNT);
 
-      Promise.all(
-        posts.map(async (post) => {
-          await User.findById(post.author, (err, user) => {
-            if (err) {
-              console.log(err);
-              throw "User Find Error";
-            }
+      for (postIndex; postIndex < posts.length; postIndex++) {
+        await User.findById(posts[postIndex].author).then((user) => {
+          posts[postIndex] = posts[postIndex].toObject();
+          posts[postIndex].author = helper.authorBuilder(user);
 
-            post = post.toObject();
-            post.author = {
-              username: user ? user.username : "Deleted User",
-              avatar: "https://image.flaticon.com/icons/png/512/17/17797.png",
-              profile: "/#",
-            };
+          posts[postIndex].progress.selfVote = helper.voteChecker(posts[postIndex].progress, req);
 
-            post.progress.upvotes = post.progress.upvotes.length;
-            post.progress.downvotes = post.progress.downvotes.length;
-          });
+          posts[postIndex].progress.upvotes = posts[postIndex].progress.upvotes.length;
+          posts[postIndex].progress.downvotes = posts[postIndex].progress.downvotes.length;
 
-          return post;
-        })
-      ).then((posts) => solve(posts));
+          delete posts[postIndex].comments;
+        }).catch(err => res.status(400).json({ message: err }));
+      }
+
+      postIndex = req.body.postsCount;
+      solve(posts.slice(postIndex, postIndex + FETCH_COUNT));
     });
   });
 }
